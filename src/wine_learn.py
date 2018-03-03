@@ -24,11 +24,6 @@ def tf_info():
     # Check TF version
     print("Tensorflow Version: ", tf.__version__)
 
-def calc_error(x, y):
-    predictions = tf.add(b, tf.matmul(x, w))
-    error = tf.reduce_mean(tf.square(y - predictions))
-    return [predictions, error]
-
 def data_info(ds):
     # print(ds.describe())
     # print(ds.corr())
@@ -66,6 +61,82 @@ def random_sample(X, y, sample_size):
     y_batch = y_array[index_sample] 
     return X_batch, y_batch
 
+def softmax_layer(X_tensor, num_units):
+    num_inputs = X_tensor.get_shape()[1].value
+    W = tf.Variable(tf.zeros([num_inputs, num_units]), name='W')
+    b = tf.Variable(tf.zeros([num_units]), name='b')
+    y = tf.nn.softmax(tf.matmul(X_tensor, W) + b)
+    return y
+
+def relu_layer(X_tensor, num_units):
+    num_inputs = X_tensor.get_shape()[1].value
+    # W = tf.Variable(tf.zeros([num_features, num_units]), name='W')
+    W = tf.Variable(tf.random.uniform([num_features, num_units]), name='W')
+    b = tf.Variable(tf.zeros([num_units]), name='b')
+    y = tf.nn.relu(tf.matmul(X_tensor, W) + b, name='relu')
+    return y
+
+def define_cost_function(y, y_tensor, batch_size):
+    cost = -tf.reduce_sum(y_tensor * tf.log(y), name='cross_entropy') / batch_size
+    return cost
+
+def train(cost, learning_rate):
+    training_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
+    return training_step
+
+def compute_accuracy(y, y_tensor):
+    correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_tensor, 1))
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"), name='accuracy')
+    return accuracy
+
+def single_layer():
+    # Create softmax layer
+    with tf.name_scope("softmax") as scope:
+        y_softmax = softmax_layer(X_placeholder, num_classes)
+
+    # Define cost function
+    with tf.name_scope("cost_function") as scope:
+        global cost
+        cost = define_cost_function(y_softmax, y_placeholder, batch_size)
+        tf.summary.scalar("cost", cost)
+
+    # Define training step
+    with tf.name_scope("training") as scope:
+        global training_step
+        training_step = train(cost, learning_rate)
+
+    # Calculate model accuracy
+    with tf.name_scope("accuracy") as scope:
+        global accuracy
+        accuracy = compute_accuracy(y_softmax, y_placeholder)
+        tf.summary.scalar("accuracy", accuracy)
+
+def two_layers():
+    # Create hidden, relu layer
+    with tf.name_scope("hidden_layer") as scope:
+        y_relu = relu_layer(X_placeholder, hidden_layer_units)
+    
+    # Create softmax layer
+    with tf.name_scope("softmax") as scope:
+        y_softmax = softmax_layer(y_relu, num_classes)
+
+    # Define cost function
+    with tf.name_scope("cost_function") as scope:
+        global cost
+        cost = define_cost_function(y_softmax, y_placeholder, batch_size)
+        tf.summary.scalar("cost", cost)
+
+    # Define training step
+    with tf.name_scope("training") as scope:
+        global training_step
+        training_step = train(cost, learning_rate)
+
+    # Calculate model accuracy
+    with tf.name_scope("accuracy") as scope:
+        global accuracy
+        accuracy = compute_accuracy(y_softmax, y_placeholder)
+        tf.summary.scalar("accuracy", accuracy)
+
 ds = dataset(path, infile)
 data_info(ds)
 y = [0 if item == 'good' else 1 for item in ds['category']]
@@ -79,3 +150,5 @@ X_train, X_test, y_train, y_test = train_test_split(X, y_one_hot, test_size=0.2,
 
 X_placeholder = tf.placeholder(tf.float32, [None, num_features], name='X')
 y_placeholder = tf.placeholder(tf.float32, [None, num_classes], name='y')
+
+single_layer()
