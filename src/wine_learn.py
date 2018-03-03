@@ -105,31 +105,6 @@ def single_layer():
         accuracy = compute_accuracy(y_softmax, y_placeholder)
         tf.summary.scalar("accuracy", accuracy)
 
-def two_layers():
-    # Create hidden, relu layer
-    with tf.name_scope("hidden_layer") as scope:
-        y_relu = relu_layer(X_placeholder, hidden_layer_units)
-    
-    # Create softmax layer
-    with tf.name_scope("softmax") as scope:
-        y_softmax = softmax_layer(y_relu, num_classes)
-
-    # Define cost function
-    with tf.name_scope("cost_function") as scope:
-        global cost
-        cost = define_cost_function(y_softmax, y_placeholder, batch_size)
-        tf.summary.scalar("cost", cost)
-
-    # Define training step
-    with tf.name_scope("training") as scope:
-        global training_step
-        training_step = train(cost, learning_rate)
-
-    # Calculate model accuracy
-    with tf.name_scope("accuracy") as scope:
-        global accuracy
-        accuracy = compute_accuracy(y_softmax, y_placeholder)
-        tf.summary.scalar("accuracy", accuracy)
 
 ds = dataset(path, infile)
 data_info(ds)
@@ -146,7 +121,7 @@ learning_rate = 0.001
 batch_size = X_train.shape[0] // 10
 num_features = X_train.shape[1]
 num_classes = 2
-epochs = 1000
+epochs = 100000
 epochs_to_print = epochs // 10
 hidden_layer_units = 20
 
