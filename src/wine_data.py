@@ -71,7 +71,6 @@ def plot_data(_path, _infile):
     plt.show()
 
 # tf_info()
-# plot_data(path, infile)
 # data_info(path, infile)
 # data_convert(path, infile)
 # data_visualise(path, infile)
@@ -92,3 +91,5 @@ print("\nBad:\n", ds_split.loc[ds_split.loc[:,'category'] == 'bad',['quality', '
 ds_split.groupby(['category']).count()
 ds_fixed = ds_split.copy()
 ds_fixed.to_csv('../data/winequality-red-fixed.csv', index=False)
+
+plot_data(path, infile)
