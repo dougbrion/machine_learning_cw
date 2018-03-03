@@ -2,18 +2,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
-import seaborn as sb
+import sklearn
+from sklearn import metrics, preprocessing
+from sklearn.model_selection import train_test_split
 
 path = "../data/"
 infile = "winequality-red-fixed.csv"
-
-learning_rate = 0.001
-batch_size = X_train.shape[0] // 10
-num_features = X_train.shape[1]
-num_classes = 2
-epochs = 1000
-epochs_to_print = epochs // 10
-hidden_layer_units = 20
 
 def dataset(_path, _infile):
     ds = pd.read_csv(_path + _infile, sep = ',')
@@ -148,7 +142,47 @@ print(y_one_hot[0:5])
 
 X_train, X_test, y_train, y_test = train_test_split(X, y_one_hot, test_size=0.2, random_state=42)
 
+learning_rate = 0.001
+batch_size = X_train.shape[0] // 10
+num_features = X_train.shape[1]
+num_classes = 2
+epochs = 1000
+epochs_to_print = epochs // 10
+hidden_layer_units = 20
+
 X_placeholder = tf.placeholder(tf.float32, [None, num_features], name='X')
 y_placeholder = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
 single_layer()
+
+# Merge summaries for TensorBoard
+merged_summaries = tf.summary.merge_all()
+
+with tf.Session() as sess:
+
+    log_directory = 'tmp/logs'
+    summary_writer = tf.summary.FileWriter(log_directory, sess.graph)
+    
+    tf.global_variables_initializer().run()
+    
+    # average_cost = 0
+    cost_sum = 0
+    for i in range(epochs):
+        
+        X_batch, y_batch = random_sample(X_train, y_train, batch_size)
+        feed_dict = {X_placeholder: X_batch, y_placeholder: y_batch}
+        _, current_cost = sess.run([training_step, cost], feed_dict)
+        cost_sum += current_cost
+        
+        # Print average cost periodically
+        if i % epochs_to_print == 99:
+            average_cost = cost_sum / epochs_to_print
+            print("Epoch: {:4d}, average cost = {:0.3f}".format(i+1, average_cost))
+            cost_sum = 0
+    
+    print('Finished model fitting.')
+ 
+    # Calculate final accuracy
+    X_batch, y_batch = random_sample(X_test, y_test, batch_size)
+    feed_dict = {X_placeholder: X_test, y_placeholder: y_test}
+    print("Final accuracy = {:0.3f}".format(sess.run(accuracy, feed_dict)))
