@@ -4,14 +4,14 @@ import helpers as hp
 import numpy as np
 
 learning_rate = 0.00001
-epochs = 10
+epochs = 1000
 step = 50
 
 def load_ds(_path, _infile):
     ds = pd.read_csv(_path + _infile, sep = ',')
     return ds
 
-def setup(_ds):
+def split(_ds):
     data = _ds.values
     split = np.split(data, [11], axis=1)
     return split[0], split[1]
@@ -39,27 +39,28 @@ def linear_regression(_train_X, _train_y):
     optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
 
     init = tf.global_variables_initializer()
-
-    print("Here 1")
+    merged_summaries = tf.summary.merge_all()
     with tf.Session() as sess:
+
+        log_directory = 'tmp/logs'
+        summary_writer = tf.summary.FileWriter(log_directory, sess.graph)
         sess.run(init)
 
         cost_sum = 0
-        print("Here 2")
         for epoch in range(epochs):
-            print("Epoch: ", epoch)
-            for (xi, yi) in zip(_train_X, _train_y):
-                sess.run(optimizer, feed_dict={X: _train_X, y: _train_y})
+            # for (xi, yi) in zip(_train_X, _train_y):
+            _, c = sess.run([optimizer, cost], feed_dict={X: _train_X, y: _train_y})
+
+            cost_sum += c
 
             if (epoch + 1) % step == 0:
-                c = sess.run(cost, feed_dict={X: _train_X, y: _train_y})
                 print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(c), "W=", sess.run(W), "b=", sess.run(b))
-
+            
 
         print("Optimization Finished!")
         training_cost = sess.run(cost, feed_dict={X: _train_X, y: _train_y})
         print("Training cost=", training_cost, "W=", sess.run(W), "b=", sess.run(b), '\n')
 
 ds = load_ds(hp.PATH, hp.FIXED)
-X, y = setup(ds)
+X, y = split(ds)
 linear_regression(X, y)
