@@ -1,32 +1,29 @@
 import tensorflow as tf
 import helpers as hp
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
-def sigmoid_fn(_X, _units):
-    inputs = _X.get_shape()[1].value
-    W = tf.Variable(tf.random_normal([inputs, _units]), name='weight')
-    b = tf.Variable(tf.random_normal([_units]), name='bias')
-    y = tf.sigmoid(tf.matmul(_X, W) + b)
-    return y
+# Parameters
+learning_rate = 0.0001
+epochs = 1000
+batch_size = 100
+step = 50
 
-def tanh_fn(_X, _units):
-    inputs = _X.get_shape()[1].value
-    W = tf.Variable(tf.random_normal([inputs, _units]), name='weight')
+def load_ds(_path, _infile):
+    ds = pd.read_csv(_path + _infile, sep = ',')
+    return ds
+
+def tanh_fn(_X, _inputs, _units):
+    W = tf.Variable(tf.random_normal([_inputs, _units]), name='weight')
     b = tf.Variable(tf.random_normal([_units]), name='bias')
     y = tf.tanh(tf.matmul(_X, W) + b)
-    return y
+    return y, W
 
-def neural_net_regression(_X, _y, _sel):
-    hidden_layer_nodes = (hp.num_features(_X) + 1) // 2
+def neural_net(_X, _y, _sel):
+    hidden_layer_nodes = 6
+    inputs = hp.num_features(_X)
 
-    hidden_layer = tanh_fn(_X, hidden_layer_nodes)
+    hidden_layer, hidden_weight = tanh_fn(_X, inputs, hidden_layer_nodes)
 
-    if _sel == "sigmoid":
-        prediction, w2 = l_sigmoid(hidden_layer, hl_nodes, 1)
-    elif _sel == "tanh":
-        prediction, w2 = l_tanh(hidden_layer, hl_nodes, 1)
-
-    error = tf.reduce_mean(tf.square(y - prediction))
-
-    w = [w1, w2]
-
-return [ prediction, error, w ]
+    pred, weight = tanh_fn(hidden_layer, 1)

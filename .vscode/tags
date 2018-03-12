@@ -1,0 +1,124 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+CATEGORIES	../src/helpers.py	/^CATEGORIES = "winequality-fixed-categories.csv"$/;"	kind:variable	line:5
+FIXED	../src/helpers.py	/^FIXED = "winequality-fixed.csv"$/;"	kind:variable	line:4
+LEARNING_RATE	../src/helpers.py	/^LEARNING_RATE = 0.00001$/;"	kind:variable	line:8
+NUM_FEATURES	../src/perceptron.py	/^NUM_FEATURES = 2$/;"	kind:variable	line:5
+NUM_ITER	../src/perceptron.py	/^NUM_ITER = 2000$/;"	kind:variable	line:6
+PATH	../src/helpers.py	/^PATH = "..\/data\/"$/;"	kind:variable	line:1
+RED	../src/helpers.py	/^RED = "winequality-red.csv"$/;"	kind:variable	line:3
+THRESHOLD	../src/helpers.py	/^THRESHOLD = 5$/;"	kind:variable	line:7
+WHITE	../src/helpers.py	/^WHITE = "winequality-white.csv"$/;"	kind:variable	line:2
+X	../src/wine_learn.py	/^X = ds.drop(['quality', 'category'], axis=1).values$/;"	kind:variable	line:105
+X_placeholder	../src/wine_learn.py	/^X_placeholder = tf.placeholder(tf.float32, [None, num_features], name='X')$/;"	kind:variable	line:120
+average_cost	../src/wine_learn.py	/^            average_cost = cost_sum \/ epochs_to_print$/;"	kind:variable	line:146
+batch_size	../src/logistic_regression.py	/^batch_size = 100$/;"	kind:variable	line:9
+batch_size	../src/wine_learn.py	/^batch_size = X_train.shape[0] \/\/ 10$/;"	kind:variable	line:113
+bins	../src/wine_data.py	/^bins = [3, 5, 9]$/;"	kind:variable	line:59
+calc_error	../src/linear_regression.py	/^def calc_error(_X, _y, _W, _b):$/;"	kind:function	line:20
+calc_error	../src/logistic_regression.py	/^def calc_error(_X, _y, _W, _b):$/;"	kind:function	line:21
+column_list	../src/wine_data.py	/^column_list = list(ds.columns)[:-1]$/;"	kind:variable	line:51
+compute_accuracy	../src/wine_learn.py	/^def compute_accuracy(y, y_tensor):$/;"	kind:function	line:73
+copy_ds	../src/wine_data.py	/^copy_ds = no_outliers_ds.copy()$/;"	kind:variable	line:56
+cost_sum	../src/wine_learn.py	/^            cost_sum = 0$/;"	kind:variable	line:148
+cost_sum	../src/wine_learn.py	/^    cost_sum = 0$/;"	kind:variable	line:136
+data_info	../src/wine_data.py	/^def data_info(ds):$/;"	kind:function	line:28
+data_info	../src/wine_learn.py	/^def data_info(ds):$/;"	kind:function	line:14
+dataset	../src/wine_learn.py	/^def dataset(_path, _infile):$/;"	kind:function	line:10
+define_cost_function	../src/wine_learn.py	/^def define_cost_function(y, y_tensor, batch_size):$/;"	kind:function	line:65
+ds	../src/linear_regression.py	/^ds = load_ds(hp.PATH, hp.FIXED)$/;"	kind:variable	line:72
+ds	../src/logistic_regression.py	/^ds = load_ds(hp.PATH, hp.FIXED)$/;"	kind:variable	line:89
+ds	../src/wine_data.py	/^ds = load_ds(hp.PATH, hp.WHITE, hp.RED)$/;"	kind:variable	line:49
+ds	../src/wine_learn.py	/^ds = dataset(hp.PATH, hp.CATEGORIES)$/;"	kind:variable	line:101
+epochs	../src/linear_regression.py	/^epochs = 100000$/;"	kind:variable	line:8
+epochs	../src/logistic_regression.py	/^epochs = 200$/;"	kind:variable	line:8
+epochs	../src/wine_learn.py	/^epochs = 1000$/;"	kind:variable	line:116
+epochs_to_print	../src/wine_learn.py	/^epochs_to_print = epochs \/\/ 10$/;"	kind:variable	line:117
+feed_dict	../src/wine_learn.py	/^        feed_dict = {X_placeholder: X_batch, y_placeholder: y_batch}$/;"	kind:variable	line:140
+feed_dict	../src/wine_learn.py	/^    feed_dict = {X_placeholder: X_test, y_placeholder: y_test}$/;"	kind:variable	line:154
+fixed_ds	../src/wine_data.py	/^fixed_ds = copy_ds.copy()$/;"	kind:variable	line:64
+helpers.py	../src/helpers.py	1;"	kind:file	line:1
+hidden_layer_units	../src/wine_learn.py	/^hidden_layer_units = 20$/;"	kind:variable	line:118
+hp	../src/linear_regression.py	/^import helpers as hp$/;"	kind:namespace	line:3
+hp	../src/logistic_regression.py	/^import helpers as hp$/;"	kind:namespace	line:3
+hp	../src/neural_network.py	/^import helpers as hp$/;"	kind:namespace	line:2
+hp	../src/wine_data.py	/^import helpers as hp$/;"	kind:namespace	line:5
+hp	../src/wine_learn.py	/^import helpers as hp$/;"	kind:namespace	line:8
+label_to_vec	../src/wine_learn.py	/^def label_to_vec(labels, num_classes=2):$/;"	kind:function	line:22
+learning_rate	../src/linear_regression.py	/^learning_rate = 0.00001$/;"	kind:variable	line:7
+learning_rate	../src/logistic_regression.py	/^learning_rate = 0.00001$/;"	kind:variable	line:7
+learning_rate	../src/perceptron.py	/^learning_rate = 0.01$/;"	kind:variable	line:7
+learning_rate	../src/wine_learn.py	/^learning_rate = 0.001$/;"	kind:variable	line:112
+linear_regression	../src/linear_regression.py	/^def linear_regression(_train_X, _train_y):$/;"	kind:function	line:25
+linear_regression.py	../src/linear_regression.py	1;"	kind:file	line:1
+load_ds	../src/linear_regression.py	/^def load_ds(_path, _infile):$/;"	kind:function	line:11
+load_ds	../src/logistic_regression.py	/^def load_ds(_path, _infile):$/;"	kind:function	line:12
+load_ds	../src/wine_data.py	/^def load_ds(_path, _w, _r):$/;"	kind:function	line:7
+log_directory	../src/wine_learn.py	/^    log_directory = 'tmp\/logs'$/;"	kind:variable	line:130
+logistic_regression	../src/logistic_regression.py	/^def logistic_regression(_train_X, _train_y):$/;"	kind:function	line:34
+logistic_regression.py	../src/logistic_regression.py	1;"	kind:file	line:1
+matplotlib	../src/linear_regression.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:5
+matplotlib	../src/logistic_regression.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:5
+matplotlib	../src/perceptron.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:3
+matplotlib	../src/wine_data.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:2
+matplotlib	../src/wine_learn.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:2
+merged_summaries	../src/wine_learn.py	/^merged_summaries = tf.summary.merge_all()$/;"	kind:variable	line:126
+metrics	../src/wine_learn.py	/^from sklearn import metrics, preprocessing$/;"	kind:namespace	line:6
+neural_net	../src/neural_network.py	/^def neural_net(_X, _y, _sel):$/;"	kind:function	line:18
+neural_network.py	../src/neural_network.py	1;"	kind:file	line:1
+no_outliers_ds	../src/wine_data.py	/^no_outliers_ds = rm_outliers_ds(norm_ds, hp.THRESHOLD, column_list[0:-1])$/;"	kind:variable	line:53
+norm_ds	../src/wine_data.py	/^norm_ds = normalise_ds(ds, column_list)$/;"	kind:variable	line:52
+normalise_ds	../src/wine_data.py	/^def normalise_ds(ds, cols):$/;"	kind:function	line:13
+np	../src/linear_regression.py	/^import numpy as np$/;"	kind:namespace	line:4
+np	../src/logistic_regression.py	/^import numpy as np$/;"	kind:namespace	line:2
+np	../src/perceptron.py	/^import numpy as np$/;"	kind:namespace	line:1
+np	../src/wine_data.py	/^import numpy as np$/;"	kind:namespace	line:4
+np	../src/wine_learn.py	/^import numpy as np$/;"	kind:namespace	line:4
+num_classes	../src/wine_learn.py	/^num_classes = 2$/;"	kind:variable	line:115
+num_examples	../src/helpers.py	/^def num_examples(_ds):$/;"	kind:function	line:10
+num_features	../src/helpers.py	/^def num_features(_ds):$/;"	kind:function	line:13
+num_features	../src/wine_learn.py	/^num_features = X_train.shape[1]$/;"	kind:variable	line:114
+pd	../src/linear_regression.py	/^import pandas as pd$/;"	kind:namespace	line:2
+pd	../src/logistic_regression.py	/^import pandas as pd$/;"	kind:namespace	line:4
+pd	../src/wine_data.py	/^import pandas as pd$/;"	kind:namespace	line:1
+pd	../src/wine_learn.py	/^import pandas as pd$/;"	kind:namespace	line:1
+perceptron.py	../src/perceptron.py	1;"	kind:file	line:1
+plot_data	../src/wine_data.py	/^def plot_data(_path, _infile):$/;"	kind:function	line:36
+plot_data	../src/wine_learn.py	/^def plot_data(_path, _infile):$/;"	kind:function	line:30
+plt	../src/linear_regression.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:5
+plt	../src/logistic_regression.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:5
+plt	../src/perceptron.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:3
+plt	../src/wine_data.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:2
+plt	../src/wine_learn.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:2
+preprocessing	../src/wine_learn.py	/^from sklearn import metrics, preprocessing$/;"	kind:namespace	line:6
+random_sample	../src/logistic_regression.py	/^def random_sample(_X, _y, _sample_size):  $/;"	kind:function	line:26
+random_sample	../src/wine_learn.py	/^def random_sample(X, y, sample_size):  $/;"	kind:function	line:43
+relu_layer	../src/wine_learn.py	/^def relu_layer(X_tensor, num_units):$/;"	kind:function	line:58
+rm_outliers_ds	../src/wine_data.py	/^def rm_outliers_ds(ds, thres, cols):$/;"	kind:function	line:20
+sigmoid_fn	../src/neural_network.py	/^def sigmoid_fn(_X, _units):$/;"	kind:function	line:4
+single_layer	../src/wine_learn.py	/^def single_layer():$/;"	kind:function	line:78
+sklearn	../src/wine_learn.py	/^import sklearn$/;"	kind:namespace	line:5
+softmax_layer	../src/wine_learn.py	/^def softmax_layer(X_tensor, num_units):$/;"	kind:function	line:51
+split	../src/linear_regression.py	/^def split(_ds):$/;"	kind:function	line:15
+split	../src/logistic_regression.py	/^def split(_ds):$/;"	kind:function	line:16
+step	../src/linear_regression.py	/^step = 50$/;"	kind:variable	line:9
+step	../src/logistic_regression.py	/^step = 1$/;"	kind:variable	line:10
+summary_writer	../src/wine_learn.py	/^    summary_writer = tf.summary.FileWriter(log_directory, sess.graph)$/;"	kind:variable	line:131
+svm.py	../src/svm.py	1;"	kind:file	line:1
+tanh_fn	../src/neural_network.py	/^def tanh_fn(_X, _units):$/;"	kind:function	line:11
+tf	../src/linear_regression.py	/^import tensorflow as tf$/;"	kind:namespace	line:1
+tf	../src/logistic_regression.py	/^import tensorflow as tf$/;"	kind:namespace	line:1
+tf	../src/neural_network.py	/^import tensorflow as tf$/;"	kind:namespace	line:1
+tf	../src/perceptron.py	/^import tensorflow as tf$/;"	kind:namespace	line:2
+tf	../src/wine_data.py	/^import tensorflow as tf$/;"	kind:namespace	line:3
+tf	../src/wine_learn.py	/^import tensorflow as tf$/;"	kind:namespace	line:3
+train	../src/wine_learn.py	/^def train(cost, learning_rate):$/;"	kind:function	line:69
+train_test_split	../src/wine_learn.py	/^from sklearn.model_selection import train_test_split$/;"	kind:namespace	line:7
+wine_data.py	../src/wine_data.py	1;"	kind:file	line:1
+wine_learn.py	../src/wine_learn.py	1;"	kind:file	line:1
+y_one_hot	../src/wine_learn.py	/^y_one_hot = label_to_vec(y, num_classes=2)$/;"	kind:variable	line:107
+y_placeholder	../src/wine_learn.py	/^y_placeholder = tf.placeholder(tf.float32, [None, num_classes], name='y')$/;"	kind:variable	line:121

@@ -4,9 +4,8 @@ import helpers as hp
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 learning_rate = 0.00001
-epochs = 1000
+epochs = 100000
 step = 50
 
 def load_ds(_path, _infile):
@@ -23,8 +22,6 @@ def calc_error(_X, _y, _W, _b):
     cost = tf.reduce_mean(tf.square(_y - pred))
     return pred, cost
 
-
-
 def linear_regression(_train_X, _train_y):
     X = tf.placeholder(tf.float32, [None, hp.num_features(_train_X)], name="input")
     y = tf.placeholder(tf.float32, name="output")
@@ -38,6 +35,7 @@ def linear_regression(_train_X, _train_y):
 
     init = tf.global_variables_initializer()
     merged_summaries = tf.summary.merge_all()
+    plot_point = [[], []]
     with tf.Session() as sess:
 
         log_directory = 'tmp/logs'
@@ -48,7 +46,9 @@ def linear_regression(_train_X, _train_y):
         for epoch in range(epochs):
             _, c = sess.run([optimizer, cost], feed_dict={X: _train_X, y: _train_y})
 
-            cost_sum += c
+            if (epoch % 10) == 0:
+                plot_point[0].append(epoch+1)
+                plot_point[1].append(c)
 
             if (epoch + 1) % step == 0:
                 print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(c), "W=", sess.run(W), "b=", sess.run(b))
@@ -57,10 +57,17 @@ def linear_regression(_train_X, _train_y):
         print("Optimization Finished!")
         training_cost = sess.run(cost, feed_dict={X: _train_X, y: _train_y})
         print("Training cost=", training_cost, "W=", sess.run(W), "b=", sess.run(b), '\n')
-        # plt.plot(_train_X, _train_y, 'ro', label='Original Data', marker='.')
+        plt.plot(_train_X, _train_y, 'ro', label='Original Data', marker='.')
         # plt.plot(_train_X, np.dot(_train_X, sess.run(W)) + sess.run(b), label='Fitted line')
-        # plt.legend()
+        plt.legend()
+        plt.show()
+
+        # plt.plot(plot_point[0], plot_point[1])
+        # plt.xlabel('Number of Epochs')
+        # plt.ylabel('Training Error')
+        # plt.grid(linestyle='-')
         # plt.show()
+
 
 ds = load_ds(hp.PATH, hp.FIXED)
 X, y = split(ds)
