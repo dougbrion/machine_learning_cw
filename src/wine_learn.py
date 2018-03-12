@@ -11,14 +11,9 @@ def dataset(_path, _infile):
     ds = pd.read_csv(_path + _infile, sep = ',')
     return ds
 
-def tf_info():
-    tf.reset_default_graph()
-    # Check TF version
-    print("Tensorflow Version: ", tf.__version__)
-
 def data_info(ds):
-    # print(ds.describe())
-    # print(ds.corr())
+    print(ds.describe())
+    print(ds.corr())
     features_list = ds.columns.values[:-2]
     labels_column = ds.columns.values[-1]
     print("The features are: {}".format(features_list))
