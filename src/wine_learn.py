@@ -121,7 +121,7 @@ learning_rate = 0.001
 batch_size = X_train.shape[0] // 10
 num_features = X_train.shape[1]
 num_classes = 2
-epochs = 100000
+epochs = 1000
 epochs_to_print = epochs // 10
 hidden_layer_units = 20
 
