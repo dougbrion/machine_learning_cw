@@ -8,15 +8,6 @@ learning_rate = 0.00001
 epochs = 100000
 step = 50
 
-def load_ds(_path, _infile):
-    ds = pd.read_csv(_path + _infile, sep = ',')
-    return ds
-
-def split(_ds):
-    data = _ds.values
-    split = np.split(data, [11], axis=1)
-    return split[0], split[1]
-
 def calc_error(_X, _y, _W, _b):
     pred = tf.add(tf.matmul(_X, _W), _b)
     cost = tf.reduce_mean(tf.square(_y - pred))
@@ -69,6 +60,6 @@ def linear_regression(_train_X, _train_y):
         # plt.show()
 
 
-ds = load_ds(hp.PATH, hp.FIXED)
-X, y = split(ds)
+ds = hp.load_ds(hp.PATH, hp.FIXED)
+X, y = hp.split(ds)
 linear_regression(X, y)
