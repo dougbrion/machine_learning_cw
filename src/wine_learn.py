@@ -5,9 +5,7 @@ import numpy as np
 import sklearn
 from sklearn import metrics, preprocessing
 from sklearn.model_selection import train_test_split
-
-path = "../data/"
-infile = "winequality-red-fixed.csv"
+import helpers as hp
 
 def dataset(_path, _infile):
     ds = pd.read_csv(_path + _infile, sep = ',')
@@ -64,7 +62,6 @@ def softmax_layer(X_tensor, num_units):
 
 def relu_layer(X_tensor, num_units):
     num_inputs = X_tensor.get_shape()[1].value
-    # W = tf.Variable(tf.zeros([num_features, num_units]), name='W')
     W = tf.Variable(tf.random.uniform([num_features, num_units]), name='W')
     b = tf.Variable(tf.zeros([num_units]), name='b')
     y = tf.nn.relu(tf.matmul(X_tensor, W) + b, name='relu')
@@ -106,7 +103,7 @@ def single_layer():
         tf.summary.scalar("accuracy", accuracy)
 
 
-ds = dataset(path, infile)
+ds = dataset(hp.PATH, hp.CATEGORIES)
 data_info(ds)
 y = [0 if item == 'good' else 1 for item in ds['category']]
 print(y[0:5])
@@ -161,3 +158,5 @@ with tf.Session() as sess:
     X_batch, y_batch = random_sample(X_test, y_test, batch_size)
     feed_dict = {X_placeholder: X_test, y_placeholder: y_test}
     print("Final accuracy = {:0.3f}".format(sess.run(accuracy, feed_dict)))
+
+print(num_features)
