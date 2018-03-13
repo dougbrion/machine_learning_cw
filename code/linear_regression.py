@@ -2,9 +2,6 @@ import tensorflow as tf
 import helpers as hp
 import numpy as np
 
-learning_rate = 0.001
-epochs = 100
-
 def calc_error(_X, _y, _W, _b):
     pred = tf.add(tf.matmul(_X, _W), _b)
     cost = tf.reduce_mean(tf.square(_y - pred))
@@ -18,36 +15,15 @@ def linear_regression(_train_X, _train_y, _epochs, _rate):
     b = tf.Variable(tf.random_normal([1], dtype=tf.float32), name="bias")
 
     pred, cost = calc_error(X, y, W, b)
-
+    
     optimizer = tf.train.GradientDescentOptimizer(_rate).minimize(cost)
-
-    init = tf.global_variables_initializer()
-    merged_summaries = tf.summary.merge_all()
-    x_axis, y_axis = [], []
+    XyWb = [X, y, W, b]
     with tf.Session() as sess:
-
-        log_directory = 'tmp/logs'
-        summary_writer = tf.summary.FileWriter(log_directory, sess.graph)
-        sess.run(init)
-
-        for epoch in range(_epochs):
-            _, c = sess.run([optimizer, cost], feed_dict={X: _train_X, y: _train_y})
-
-            if (epoch % 10) == 0:
-                x_axis.append(epoch + 1)
-                y_axis.append(c)
-
-            # if (epoch + 1) % 50 == 0:
-               # print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(c), "W=", sess.run(W), "b=", sess.run(b))
-            
-
-        training_cost = sess.run(cost, feed_dict={X: _train_X, y: _train_y})
-        #print("Optimization Finished!")
-        #print("Training cost=", training_cost, "W=", sess.run(W), "b=", sess.run(b), '\n')
-        return x_axis, y_axis
-
+        # return hp.run(sess, XyWb, _train_X, _train_y, optimizer, cost, _epochs, _rate, "lin")
+        return hp.cross_validation(sess, XyWb, _train_X, _train_y, optimizer, cost, _epochs, _rate, 10, "lin")
 
 def run_linear_regression(epochs, rate):
     ds = hp.load_ds(hp.PATH, hp.FIXED)
     X, y = hp.split(ds)
-    return linear_regression(X, y, epochs, rate)
+    # return linear_regression(X, y, epochs, rate)
+    linear_regression(X, y, epochs, rate)

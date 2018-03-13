@@ -20,33 +20,11 @@ def logistic_regression(_train_X, _train_y, _epochs, _rate):
     _, cost = calc_error(X, y, W, b)
 
     optimizer = tf.train.GradientDescentOptimizer(_rate).minimize(cost)
+    XyWb = [X, y, W, b]
 
-    init = tf.global_variables_initializer()
 
-    merged_summaries = tf.summary.merge_all()
-    x_axis, y_axis = [], []
     with tf.Session() as sess:
-
-        log_directory = 'tmp/logs'
-        summary_writer = tf.summary.FileWriter(log_directory, sess.graph)
-        sess.run(init)
-
-        for epoch in range(_epochs):
-            _, c = sess.run([optimizer, cost], feed_dict={X: _train_X, y: _train_y})
-            
-            c = np.exp(c)
-
-            if (epoch % 10) == 0:
-                x_axis.append(epoch + 1)
-                y_axis.append(c)
-
-            if (epoch + 1) % 50 == 0:
-                print("Epoch:", '%04d' % (epoch + 1), "cost=", c)
-            
-        #print("Optimization Finished!")
-        training_cost = sess.run(cost, feed_dict={X: _train_X, y: _train_y})
-        #print("Training cost=", training_cost, "W=", sess.run(W), "b=", sess.run(b), '\n')
-        return x_axis, y_axis
+        return hp.run(sess, XyWb, _train_X, _train_y, optimizer, cost, _epochs, _rate, "log")
 
 def run_logistic_regression(epochs, rate):
     ds = hp.load_ds(hp.PATH, hp.FIXED)
