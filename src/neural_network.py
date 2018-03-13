@@ -5,8 +5,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Parameters
-learning_rate = 0.0001
-epochs = 100000
+learning_rate = 0.001
+epochs = 10000
 step = 50
 
 def tanh_fn(_X, _inputs, _units):
@@ -44,7 +44,7 @@ def run_neural_net(_train_X, _train_y):
 
     init = tf.global_variables_initializer()
     merged_summaries = tf.summary.merge_all()
-    plot_point = [[], []]
+    x_axis, y_axis = [], []
 
     with tf.Session() as sess:
 
@@ -56,8 +56,8 @@ def run_neural_net(_train_X, _train_y):
             _, c = sess.run([optimizer, cost], feed_dict={X: _train_X, y: _train_y})
 
             if (epoch % 10) == 0:
-                plot_point[0].append(epoch+1)
-                plot_point[1].append(c)
+                x_axis.append(epoch+1)
+                y_axis.append(c)
 
             if (epoch + 1) % step == 0:
                 print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(c))
@@ -71,7 +71,7 @@ def run_neural_net(_train_X, _train_y):
         # plt.legend()
         # plt.show()
 
-        plt.plot(plot_point[0], plot_point[1])
+        plt.plot(x_axis, y_axis)
         plt.title('Neural Network')
         plt.xlabel('Number of Epochs')
         plt.ylabel('Training Error')

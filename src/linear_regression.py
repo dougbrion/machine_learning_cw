@@ -26,7 +26,7 @@ def linear_regression(_train_X, _train_y):
 
     init = tf.global_variables_initializer()
     merged_summaries = tf.summary.merge_all()
-    plot_point = [[], []]
+    x_axis, y_axis = [], []
     with tf.Session() as sess:
 
         log_directory = 'tmp/logs'
@@ -38,8 +38,8 @@ def linear_regression(_train_X, _train_y):
             _, c = sess.run([optimizer, cost], feed_dict={X: _train_X, y: _train_y})
 
             if (epoch % 10) == 0:
-                plot_point[0].append(epoch+1)
-                plot_point[1].append(c)
+                x_axis.append(epoch+1)
+                y_axis.append(c)
 
             if (epoch + 1) % step == 0:
                 print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(c), "W=", sess.run(W), "b=", sess.run(b))
@@ -48,12 +48,14 @@ def linear_regression(_train_X, _train_y):
         print("Optimization Finished!")
         training_cost = sess.run(cost, feed_dict={X: _train_X, y: _train_y})
         print("Training cost=", training_cost, "W=", sess.run(W), "b=", sess.run(b), '\n')
-        # plt.plot(_train_X, _train_y, 'ro', label='Original Data', marker='.')
+        # plt.plot(_train_X, _train_y, 'ro', marker='.')
+        # plt.title('XY plot of Original Data')
+        # plt.xlabel('X')
+        # plt.ylabel('y')
         # # plt.plot(_train_X, np.dot(_train_X, sess.run(W)) + sess.run(b), label='Fitted line')
-        # plt.legend()
         # plt.show()
 
-        plt.plot(plot_point[0], plot_point[1])
+        plt.plot(x_axis, y_axis)
         plt.title('Basic Linear Regression, Epochs=100, Learning Rate=0.001')
         plt.xlabel('Number of Epochs')
         plt.ylabel('Training Error')

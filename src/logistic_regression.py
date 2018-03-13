@@ -47,7 +47,7 @@ def logistic_regression(_train_X, _train_y):
     init = tf.global_variables_initializer()
 
     merged_summaries = tf.summary.merge_all()
-    plot_point = [[], []]
+    x_axis, y_axis = [], []
     with tf.Session() as sess:
 
         log_directory = 'tmp/logs'
@@ -69,8 +69,8 @@ def logistic_regression(_train_X, _train_y):
             #     print(avg_cost)
 
             if (epoch % 10) == 0:
-                plot_point[0].append(epoch+1)
-                plot_point[1].append(c)
+                x_axis.append(epoch+1)
+                y_axis.append(c)
 
             if (epoch + 1) % step == 0:
                 print("Epoch:", '%04d' % (epoch + 1), "cost=", c)
@@ -81,7 +81,7 @@ def logistic_regression(_train_X, _train_y):
         # plt.plot(_train_X, _train_y, 'ro', label='Original Data', marker='.')
         # plt.legend()
         # plt.show()
-        plt.plot(plot_point[0], plot_point[1])
+        plt.plot(x_axis, y_axis)
         plt.xlabel('Number of Epochs')
         plt.ylabel('Training Error')
         plt.grid(linestyle='-')
