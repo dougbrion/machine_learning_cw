@@ -51,7 +51,7 @@ def layers(_X, _y):
 
     return pred, cost, W, b
 
-def neural_network(_train_X, _train_y, _epochs, _rate):
+def neural_network(_train_X, _train_y, _test_X, _test_y, _epochs, _rate):
     X = tf.placeholder(tf.float32, [None, hp.num_features(_train_X)], name="input")
     y = tf.placeholder(tf.float32, name="output")
     pred, cost, W, b = layers(X, y)
@@ -60,7 +60,7 @@ def neural_network(_train_X, _train_y, _epochs, _rate):
     XyWb = [X, y, W, b]
 
     with tf.Session() as sess:
-        return hp.run(sess, XyWb, _train_X, _train_y, optimizer, cost, _epochs, _rate, "nn")
+        return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "nn")
 
 def run_neural_network(epochs, rate):
     ds = hp.load_ds(hp.PATH, hp.FIXED)

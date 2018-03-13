@@ -7,7 +7,7 @@ def calc_error(_X, _y, _W, _b):
     cost = tf.reduce_mean(tf.square(_y - pred))
     return pred, cost
 
-def linear_regression(_train_X, _train_y, _epochs, _rate):
+def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate):
     X = tf.placeholder(tf.float32, [None, hp.num_features(_train_X)], name="input")
     y = tf.placeholder(tf.float32, name="output")
 
@@ -19,8 +19,8 @@ def linear_regression(_train_X, _train_y, _epochs, _rate):
     optimizer = tf.train.GradientDescentOptimizer(_rate).minimize(cost)
     XyWb = [X, y, W, b]
     with tf.Session() as sess:
-        # return hp.run(sess, XyWb, _train_X, _train_y, optimizer, cost, _epochs, _rate, "lin")
-        return hp.cross_validation(sess, XyWb, _train_X, _train_y, optimizer, cost, _epochs, _rate, 10, "lin")
+        return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "lin")
+        # return hp.cross_validation(sess, XyWb, _train_X, _train_y, optimizer, cost, _epochs, _rate, 10, "lin")
 
 def run_linear_regression(epochs, rate):
     ds = hp.load_ds(hp.PATH, hp.FIXED)

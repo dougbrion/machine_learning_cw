@@ -33,9 +33,9 @@ def expand(_lst):
     else:
         return _lst[0], _lst[1], _lst[2], _lst[3]
 
-def test(_sess, _XyWb, _cost, _train_X, _train_y, _type):
+def test(_sess, _XyWb, _cost, _test_X, _test_y, _type):
     X, y, W, b = expand(_XyWb)
-    cost = _sess.run(_cost, feed_dict={X: _train_X, y: _train_y})
+    cost = _sess.run(_cost, feed_dict={X: _test_X, y: _test_y})
 
     if _type == "log":
         cost = np.exp(cost)
@@ -56,36 +56,42 @@ def random_sample(_X, _y, _size):
         y_sample = _y[index_sample]
         return X_sample, y_sample
 
-def run(_sess, _XyWb, _train_X, _train_y, _opt, _cost, _epochs, _rate, _type):
+def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs, _rate, _type):
     X, y, W, b = expand(_XyWb)
 
     merged_summaries = tf.summary.merge_all()
     log_directory = 'tmp/logs'
     summary_writer = tf.summary.FileWriter(log_directory, _sess.graph)
 
-    x_axis, y_axis = [], []
+    training_x_axis, training_y_axis = [], []
+
+    test_x_axis, test_y_axis = [], []
     
     init = tf.global_variables_initializer()
     _sess.run(init)
 
     for epoch in range(_epochs):
-        _, c = _sess.run([_opt, _cost], feed_dict={X: _train_X, y: _train_y})
+        _, training_cost = _sess.run([_opt, _cost], feed_dict={X: _train_X, y: _train_y})
+        test_cost = _sess.run(_cost, feed_dict={X: _test_X, y: _test_y})
 
         if _type == "log":
-            c = np.exp(c)
+            training_cost = np.exp(training_cost)
+            test_cost = np.exp(test_cost)
             
         if (epoch % 10) == 0:
-            x_axis.append(epoch + 1)
-            y_axis.append(c)
+            training_x_axis.append(epoch + 1)
+            training_y_axis.append(training_cost)
+            test_x_axis.append(epoch + 1)
+            test_y_axis.append(test_cost)
 
         if (epoch + 1) % 50 == 0:
-            print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(c), "W=", _sess.run(W), "b=", _sess.run(b))
+            print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(training_cost), "W=", _sess.run(W), "b=", _sess.run(b))
         
     print("\nOptimization Finished!\n")
     XyWb = [X, y, W, b]
-    test(_sess, XyWb, _cost, _train_X, _train_y, _type)
+    test(_sess, XyWb, _cost, _test_X, _test_y, _type)
 
-    return x_axis, y_axis
+    return training_x_axis, training_y_axis, test_x_axis, test_y_axis
 
 def cross_validation(_sess, _XyWb, _train_X, _train_y, _opt, _cost, _epochs, _rate, _num_fold, _type):
     X, y, W, b = expand(_XyWb)
@@ -94,7 +100,7 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _opt, _cost, _epochs, _ra
     log_directory = 'tmp/logs'
     summary_writer = tf.summary.FileWriter(log_directory, _sess.graph)
 
-    x_axis, y_axis = [], []
+    training_x_axis, training_y_axis = [], []
     
     init = tf.global_variables_initializer()
 
@@ -137,10 +143,10 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _opt, _cost, _epochs, _ra
             cost = test(_sess, XyWb, _cost, _train_X, _train_y, _type)
             overall_cost += cost
 
-            x_axis.append(i)
-            y_axis.append(error_n)
+            training_x_axis.append(i)
+            training_y_axis.append(cost)
             
         overall_cost /= _num_fold
-        x_axis.append(_num_fold)
-        y_axis.append(overall_cost)
-        return x_axis, y_axis
+        training_x_axis.append(_num_fold)
+        training_y_axis.append(overall_cost)
+        return training_x_axis, training_y_axis

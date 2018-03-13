@@ -8,7 +8,7 @@ def calc_error(_X, _y, _W, _b):
     cost = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=pred, labels=_y))
     return pred, cost
 
-def logistic_regression(_train_X, _train_y, _epochs, _rate):
+def logistic_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate):
     X = tf.placeholder(tf.float32, [None, hp.num_features(_train_X)], name="input")
     y = tf.placeholder(tf.float32, name="output")
 
@@ -24,7 +24,7 @@ def logistic_regression(_train_X, _train_y, _epochs, _rate):
 
 
     with tf.Session() as sess:
-        return hp.run(sess, XyWb, _train_X, _train_y, optimizer, cost, _epochs, _rate, "log")
+        return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "log")
 
 def run_logistic_regression(epochs, rate):
     ds = hp.load_ds(hp.PATH, hp.FIXED)
