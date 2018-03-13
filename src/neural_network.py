@@ -72,6 +72,7 @@ def run_neural_net(_train_X, _train_y):
         # plt.show()
 
         plt.plot(plot_point[0], plot_point[1])
+        plt.title('Neural Network')
         plt.xlabel('Number of Epochs')
         plt.ylabel('Training Error')
         plt.grid(linestyle='-')

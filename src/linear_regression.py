@@ -4,8 +4,8 @@ import helpers as hp
 import numpy as np
 import matplotlib.pyplot as plt
 
-learning_rate = 0.00001
-epochs = 100000
+learning_rate = 0.001
+epochs = 100
 step = 50
 
 def calc_error(_X, _y, _W, _b):
@@ -48,16 +48,17 @@ def linear_regression(_train_X, _train_y):
         print("Optimization Finished!")
         training_cost = sess.run(cost, feed_dict={X: _train_X, y: _train_y})
         print("Training cost=", training_cost, "W=", sess.run(W), "b=", sess.run(b), '\n')
-        plt.plot(_train_X, _train_y, 'ro', label='Original Data', marker='.')
-        # plt.plot(_train_X, np.dot(_train_X, sess.run(W)) + sess.run(b), label='Fitted line')
-        plt.legend()
-        plt.show()
-
-        # plt.plot(plot_point[0], plot_point[1])
-        # plt.xlabel('Number of Epochs')
-        # plt.ylabel('Training Error')
-        # plt.grid(linestyle='-')
+        # plt.plot(_train_X, _train_y, 'ro', label='Original Data', marker='.')
+        # # plt.plot(_train_X, np.dot(_train_X, sess.run(W)) + sess.run(b), label='Fitted line')
+        # plt.legend()
         # plt.show()
+
+        plt.plot(plot_point[0], plot_point[1])
+        plt.title('Basic Linear Regression, Epochs=100, Learning Rate=0.001')
+        plt.xlabel('Number of Epochs')
+        plt.ylabel('Training Error')
+        plt.grid(linestyle='-')
+        plt.show()
 
 
 ds = hp.load_ds(hp.PATH, hp.FIXED)
