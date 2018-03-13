@@ -87,25 +87,60 @@ def run(_sess, _XyWb, _train_X, _train_y, _opt, _cost, _epochs, _rate, _type):
 
     return x_axis, y_axis
 
-# def cross_validation(_sess, _XyWb, _train_X, _train_y, _opt, _cost, _epochs, _rate, _num_fold, _type):
-#     X, y, W, b = expand(_XyWb)
+def cross_validation(_sess, _XyWb, _train_X, _train_y, _opt, _cost, _epochs, _rate, _num_fold, _type):
+    X, y, W, b = expand(_XyWb)
 
-#     merged_summaries = tf.summary.merge_all()
-#     log_directory = 'tmp/logs'
-#     summary_writer = tf.summary.FileWriter(log_directory, _sess.graph)
+    merged_summaries = tf.summary.merge_all()
+    log_directory = 'tmp/logs'
+    summary_writer = tf.summary.FileWriter(log_directory, _sess.graph)
 
-#     x_axis, y_axis = [], []
+    x_axis, y_axis = [], []
     
-#     init = tf.global_variables_initializer()
+    init = tf.global_variables_initializer()
 
-#     y_size = len(_train_y)
-#     x_size = len(_train_X)
+    y_size = len(_train_y)
+    x_size = len(_train_X)
 
-#     if y_size != x_size:
-#         print("Something has gone wrong, arrays not same length")
-#         print("length y: ", y_size)
-#         print("length x: ", x_size)
+    if y_size != x_size:
+        print("Something has gone wrong, arrays not same length")
+        print("length y: ", y_size)
+        print("length x: ", x_size)
 
-#     else:
-#     sample_size = y_size // _num_fold
+    else:
+        sample_size = y_size // _num_fold
+        overall_cost = 0
 
+        for i in range(_num_fold):       
+            _sess.run(init)
+            for epoch in range(_epochs):
+                cost_sum = 0
+                for j in range(_num_fold):
+
+                    if j == i:
+                        continue
+
+                    train_X, train_y = random_sample(_train_X, _train_y, sample_size)
+
+                    _, c = _sess.run([_opt, _cost], feed_dict={X: train_X, y: train_y})
+
+                    if _type == "log":
+                        c = np.exp(c)
+
+                    cost_sum += c
+
+
+                cost_sum /= (_num_fold - 1)
+
+            print("\nOptimization Finished!\n")
+
+            XyWb = [X, y, W, b]
+            cost = test(_sess, XyWb, _cost, _train_X, _train_y, _type)
+            overall_cost += cost
+
+            x_axis.append(i)
+            y_axis.append(error_n)
+            
+        overall_cost /= _num_fold
+        x_axis.append(_num_fold)
+        y_axis.append(overall_cost)
+        return x_axis, y_axis

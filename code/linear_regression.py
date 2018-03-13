@@ -25,5 +25,4 @@ def linear_regression(_train_X, _train_y, _epochs, _rate):
 def run_linear_regression(epochs, rate):
     ds = hp.load_ds(hp.PATH, hp.FIXED)
     X, y = hp.split(ds)
-    # return linear_regression(X, y, epochs, rate)
-    linear_regression(X, y, epochs, rate)
+    return linear_regression(X, y, epochs, rate)
