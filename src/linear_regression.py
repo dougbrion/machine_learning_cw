@@ -33,7 +33,6 @@ def linear_regression(_train_X, _train_y):
         summary_writer = tf.summary.FileWriter(log_directory, sess.graph)
         sess.run(init)
 
-        cost_sum = 0
         for epoch in range(epochs):
             _, c = sess.run([optimizer, cost], feed_dict={X: _train_X, y: _train_y})
 

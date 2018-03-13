@@ -6,17 +6,41 @@ import matplotlib.pyplot as plt
 
 # Parameters
 learning_rate = 0.001
-epochs = 10000
+epochs = 200
 step = 50
+
+def softmax_fn(_X, _inputs, _units):
+    W = tf.Variable(tf.random_normal([_inputs, _units]), name='weight')
+    b = tf.Variable(tf.random_normal([_units]), name='bias')
+    y = tf.nn.softmax(tf.add(tf.matmul(_X, W), b))
+    return y, W
+
+def selu_fn(_X, _inputs, _units):
+    W = tf.Variable(tf.random_normal([_inputs, _units]), name='weight')
+    b = tf.Variable(tf.random_normal([_units]), name='bias')
+    y = tf.nn.selu(tf.add(tf.matmul(_X, W), b))
+    return y, W
+
+def relu_fn(_X, _inputs, _units):
+    W = tf.Variable(tf.random_normal([_inputs, _units]), name='weight')
+    b = tf.Variable(tf.random_normal([_units]), name='bias')
+    y = tf.nn.relu(tf.add(tf.matmul(_X, W), b))
+    return y, W
+
+def sigmoid_fn(_X, _inputs, _units):
+    W = tf.Variable(tf.random_normal([_inputs, _units]), name='weight')
+    b = tf.Variable(tf.random_normal([_units]), name='bias')
+    y = tf.nn.sigmoid(tf.add(tf.matmul(_X, W), b))
+    return y, W
 
 def tanh_fn(_X, _inputs, _units):
     W = tf.Variable(tf.random_normal([_inputs, _units]), name='weight')
     b = tf.Variable(tf.random_normal([_units]), name='bias')
-    y = tf.tanh(tf.matmul(_X, W) + b)
+    y = tf.nn.tanh(tf.add(tf.matmul(_X, W), b))
     return y, W
 
 def cost_function(_y, _pred):
-    cost = tf.reduce_mean(tf.square(_y - _pred))   
+    cost = tf.reduce_mean(tf.square(_y - _pred))
     return cost
 
 def neural_net(_X, _y):
@@ -24,14 +48,12 @@ def neural_net(_X, _y):
     hidden_layer_nodes = int((inputs + 1) / 2)
 
 
-    hidden_layer, hidden_weight = tanh_fn(_X, inputs, hidden_layer_nodes)
+    hidden_layer, hidden_weight = relu_fn(_X, inputs, hidden_layer_nodes)
 
     pred, weight = tanh_fn(hidden_layer, hidden_layer_nodes, 1)
 
     cost = cost_function(_y, pred)
     W = [hidden_weight, weight]
-    print(W)
-
 
     return pred, cost, W
 
@@ -40,7 +62,7 @@ def run_neural_net(_train_X, _train_y):
     y = tf.placeholder(tf.float32, name="output")
     pred, cost, W = neural_net(X, y)
 
-    optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost)
+    optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
 
     init = tf.global_variables_initializer()
     merged_summaries = tf.summary.merge_all()
@@ -72,7 +94,7 @@ def run_neural_net(_train_X, _train_y):
         # plt.show()
 
         plt.plot(x_axis, y_axis)
-        plt.title('Neural Network')
+        plt.title('Neural Network, Epochs=200, Learning Rate=0.001\nHidden ReLu layer, Output tanh layer')
         plt.xlabel('Number of Epochs')
         plt.ylabel('Training Error')
         plt.grid(linestyle='-')
