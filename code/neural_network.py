@@ -1,13 +1,6 @@
 import tensorflow as tf
 import helpers as hp
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# Parameters
-learning_rate = 0.001
-epochs = 200
-step = 50
 
 def softmax_fn(_X, _inputs, _units):
     W = tf.Variable(tf.random_normal([_inputs, _units]), name='weight')
@@ -81,7 +74,7 @@ def neural_network(_train_X, _train_y, _epochs, _rate):
                 x_axis.append(epoch+1)
                 y_axis.append(c)
 
-            # if (epoch + 1) % step == 0:
+            # if (epoch + 1) % 50 == 0:
                 #print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(c))
             
 

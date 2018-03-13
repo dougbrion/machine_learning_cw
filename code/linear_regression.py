@@ -1,8 +1,6 @@
 import tensorflow as tf
-import pandas as pd
 import helpers as hp
 import numpy as np
-import matplotlib.pyplot as plt
 
 learning_rate = 0.001
 epochs = 100

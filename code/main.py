@@ -37,6 +37,7 @@ def main():
     if len(sys.argv) == 2:
         if sys.argv[1] == "testsuite":
             print("Running Test Suite")
+
         elif sys.argv[1] == "plotter":
             print("Running Plotter")
             for i in epochs_list:
@@ -63,7 +64,7 @@ def main():
                     print("Finished Neural Network " + str(i) + " " + str(j))
 
                     print("\nPlotted epochs " + str(i) + " and learning rate " + str(j) + "\n")
-
+        
         elif sys.argv[1] == "linr":
             i = input("How many epochs? ")
             j = input("What learning rate? ")
@@ -71,6 +72,25 @@ def main():
             print("Running Linear Regression")
             x, y = linr.run_linear_regression(int(i), float(j))
             plotter(x, y, "", title, False)
+
+        elif sys.argv[1] == "linr_break":
+            i = 100
+            j = 0.31
+            incr = 0.01
+            for n in range(0,6):
+                x, y = linr.run_linear_regression(i, j)
+                learning_rate = "Learning Rate=" + "{:.2f}".format(j)
+                plt.plot(x, y, label=learning_rate)
+                plt.title("Basic Linear Regression, Epochs=100, Learning Rate=variable")
+                plt.xlabel("Number of Epochs")
+                plt.ylabel("Training Error")
+                plt.ylim(0, 100)
+                plt.legend()
+                plt.grid(linestyle='-')
+                j += incr
+                print(n)
+            plt.show()
+
         elif sys.argv[1] == "logr":
             i = input("How many epochs? ")
             j = input("What learning rate? ")
@@ -78,6 +98,25 @@ def main():
             print("Running Logistic Regression")
             x, y = logr.run_logistic_regression(int(i), float(j))
             plotter(x, y, "", title, False)
+
+        elif sys.argv[1] == "logr_break":
+            i = 100
+            j = 0.31
+            incr = 0.01
+            for n in range(0,6):
+                x, y = logr.run_logistic_regression(i, j)
+                learning_rate = "Learning Rate=" + "{:.2f}".format(j)
+                plt.plot(x, y, label=learning_rate)
+                plt.title("Basic Logistic Regression, Epochs=100, Learning Rate=variable")
+                plt.xlabel("Number of Epochs")
+                plt.ylabel("Training Error")
+                plt.ylim(0, 100)
+                plt.legend()
+                plt.grid(linestyle='-')
+                j += incr
+                print(n)
+            plt.show()
+
         elif sys.argv[1] == "nn":
             i = input("How many epochs? ")
             j = input("What learning rate? ")
@@ -85,6 +124,7 @@ def main():
             print("Running Neural Network")
             x, y = nn.run_neural_network(int(i), float(j))
             plotter(x, y, "", title, False)
+
         elif sys.argv[1] == "svm":
             i = input("How many epochs? ")
             j = input("What learning rate? ")
