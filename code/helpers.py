@@ -32,7 +32,7 @@ def load_ds(_path, _infile):
 def split(_ds):
     data = _ds.values
     split = np.split(data, [11], axis=1)
-    return split[0], split[1]
+    return split[0].astype(np.float32), split[1].astype(np.float32)
 
 def remove_elements(a, b):
     return np.setxor1d(a, b)
@@ -142,8 +142,13 @@ def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs
     XyWb = [X, y, W, b]
     test(_sess, XyWb, _cost, _train_X, _train_y, _type)
     test(_sess, XyWb, _cost, _test_X, _test_y, _type)
+
+    plt.plot(_test_X, _test_y, 'bo', label='Testing data')
+    plt.plot(_train_X, tf.matmul(tf.tranpose(_sess.run(W)), _train_X) + _sess.run(b), label='Fitted line')
+    plt.legend()
+    plt.show()
     # print(end_cost)
-    return training_x_axis, training_y_axis, test_x_axis, test_y_axis
+    # return training_x_axis, training_y_axis, test_x_axis, test_y_axis
 
 def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs, _rate,  _type, _num_fold=10):
     X, y, W, b = expand(_XyWb)

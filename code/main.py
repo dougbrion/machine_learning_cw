@@ -67,8 +67,9 @@ def main():
             j = input("What learning rate? ")
             title = "Basic Linear Regression, Epochs=" + i + ", Learning Rate=" + j
             print("Running Linear Regression")
-            x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, int(i), float(j), 0, True)
-            hp.plotter(title, x, y, tx, ty)
+            # x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, int(i), float(j))
+            linr.linear_regression(train_X, train_y, test_X, test_y, int(i), float(j))
+            # hp.plotter(title, x, y, tx, ty)
 
         elif sys.argv[1] == "linr_break":
             i = 100
