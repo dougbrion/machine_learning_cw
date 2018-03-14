@@ -135,16 +135,17 @@ def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs
             test_x_axis.append(epoch + 1)
             test_y_axis.append(test_cost)
 
-        if (epoch + 1) % 50 == 0:
-            print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(training_cost), "W=", _sess.run(W), "b=", _sess.run(b))
+        # if (epoch + 1) % 50 == 0:
+            # print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(training_cost), "W=", _sess.run(W), "b=", _sess.run(b))
         
-    print("\nOptimization Finished!\n")
+    print("\nOptimization Finished!")
     XyWb = [X, y, W, b]
-    end_cost = test(_sess, XyWb, _cost, _test_X, _test_y, _type)
-    print(end_cost)
+    test(_sess, XyWb, _cost, _train_X, _train_y, _type)
+    test(_sess, XyWb, _cost, _test_X, _test_y, _type)
+    # print(end_cost)
     return training_x_axis, training_y_axis, test_x_axis, test_y_axis
 
-def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs, _rate, _num_fold, _type):
+def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs, _rate,  _type, _num_fold=10):
     X, y, W, b = expand(_XyWb)
 
     merged_summaries = tf.summary.merge_all()
@@ -202,8 +203,8 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
                     testing_x_axis.append(epoch + 1)
                     testing_y_axis.append(blah)
 
-                if (epoch + 1) % 50 == 0:
-                    print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(training_cost), "W=", _sess.run(W), "b=", _sess.run(b))
+                # if (epoch + 1) % 50 == 0:
+                    # print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(training_cost), "W=", _sess.run(W), "b=", _sess.run(b))
 
             print("\nOptimization Finished!\n")
 
@@ -215,11 +216,12 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
             # training_y_axis.append(cost)
             
         overall_cost /= _num_fold
+        print(overall_cost)
         # training_x_axis.append(_num_fold)
         # training_y_axis.append(overall_cost)
         return training_x_axis, training_y_axis, testing_x_axis, testing_y_axis
 
-def plotter(x, y, tx, ty, filename, title, save):
+def plotter(title, x, y, tx, ty, filename = "", save = False):
     plt.plot(x, y, label='training')
     plt.plot(tx, ty, label='test')
     plt.title(title)

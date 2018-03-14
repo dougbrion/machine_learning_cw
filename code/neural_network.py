@@ -40,7 +40,6 @@ def layers(_X, _y):
     inputs = int(hp.num_features(_X))
     hidden_layer_nodes = int((inputs + 1) / 2)
 
-
     hidden_layer, hidden_weight, hidden_bias = relu_fn(_X, inputs, hidden_layer_nodes)
 
     pred, weight, bias = tanh_fn(hidden_layer, hidden_layer_nodes, 1)
@@ -51,18 +50,29 @@ def layers(_X, _y):
 
     return pred, cost, W, b
 
-def neural_network(_train_X, _train_y, _test_X, _test_y, _epochs, _rate):
+def neural_network(_train_X, _train_y, _test_X, _test_y, _epochs, _rate,  _regularisation = 0, _cross_val = False):
     X = tf.placeholder(tf.float32, [None, hp.num_features(_train_X)], name="input")
     y = tf.placeholder(tf.float32, name="output")
     pred, cost, W, b = layers(X, y)
-    optimizer = tf.train.GradientDescentOptimizer(_rate).minimize(cost)
+
+    print("Regularisation: ", _regularisation)
+    if _regularisation == 1:
+        L1 = tf.contrib.layers.l1_regularizer(scale = 0.1)
+        reg_cost = tf.contrib.layers.apply_regularization(L1, [W])
+    elif _regularisation == 2:
+        L2 = tf.contrib.layers.l2_regularizer(scale = 0.1)
+        reg_cost = tf.contrib.layers.apply_regularization(L2, [W])
+    else:
+        reg_cost = 0
+    
+    cost += reg_cost
+
+    optimizer = tf.train.AdamOptimizer(_rate).minimize(cost)
 
     XyWb = [X, y, W, b]
 
     with tf.Session() as sess:
-        return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "nn")
-
-def run_neural_network(epochs, rate):
-    ds = hp.load_ds(hp.PATH, hp.FIXED)
-    X, y = hp.split(ds)
-    return neural_network(X, y, epochs, rate)
+        if _cross_val == True:
+            return hp.cross_validation(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "nn")
+        else:
+            return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "nn")
