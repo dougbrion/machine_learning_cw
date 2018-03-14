@@ -19,10 +19,7 @@ def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate):
     optimizer = tf.train.GradientDescentOptimizer(_rate).minimize(cost)
     XyWb = [X, y, W, b]
     with tf.Session() as sess:
+        # if _cross_val == True:
+        return hp.cross_validation(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, 10, "lin")
+        # else:
         return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "lin")
-        # return hp.cross_validation(sess, XyWb, _train_X, _train_y, optimizer, cost, _epochs, _rate, 10, "lin")
-
-def run_linear_regression(epochs, rate):
-    ds = hp.load_ds(hp.PATH, hp.FIXED)
-    X, y = hp.split(ds)
-    return linear_regression(X, y, epochs, rate)

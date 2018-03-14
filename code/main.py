@@ -12,54 +12,35 @@ import matplotlib.pyplot as plt
 learning_rate_list = [0.1, 0.001, 0.0001, 0.00001]
 epochs_list = [100, 500, 1000, 5000, 10000, 50000]
 
-def setup():
-    i = input("How many epochs? ")
-    j = input("What learning rate? ")
-    title = "Basic Linear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j)
-    return i, j, title
-
-def plotter(x, y, tx, ty, filename, title, save):
-    plt.plot(x, y, label='training')
-    plt.plot(tx, ty, label='test')
-    plt.title(title)
-    plt.xlabel("Number of Epochs")
-    plt.ylabel("Training Error")
-    plt.grid(linestyle='-')
-    plt.legend()
-    if save == True:
-        plt.savefig(filename)
-        plt.close()
-    else:
-        plt.show()
-
 def main():
-    print("###############################")
-    print("# Machine Learning Coursework #")
-    print("######## Douglas Brion ########")
-    print("###############################\n")
+    hp.intro()
+    train_percent = int(input("Enter percentage of data for training: "))
+    while train_percent < 0 or train_percent > 100:
+        train_percent = input("Error. Value not a valid percentage. Enter a new percentage: ")
 
+    print(train_percent, "% of the data will be used for training")
+    test_percent = 100 - train_percent
+    print(test_percent, "% of the data will be used for testing")
+    
     ds = hp.load_ds(hp.PATH, hp.FIXED)
     X, y = hp.split(ds)
-    # random.shuffle(X)
-    # random.shuffle(y)
-    # train_X = X
-    # train_y = y
+
     y_size = len(y)
-    training_size = 3 * (y_size // 4)
+    training_size = int((train_percent / 100) * y_size)
     testing_size = y_size - training_size
-    train_X = X[:training_size]
-    train_y = y[:training_size]
-    test_X = X[-testing_size:]
-    test_y = y[-testing_size:]
-    # print(train_X)
-    # print(train_y)
+
+    train_X, train_y, test_X, test_y = hp.random_train_test(X, y, training_size)
+    print("train_X: ", train_X)
+    print("train_y: ", train_y)
+    print("test_X: ", test_X)
+    print("test_y: ", test_y)
 
 
     if len(sys.argv) == 2:
         if sys.argv[1] == "testsuite":
             print("Running Test Suite")
 
-        elif sys.argv[1] == "plotter":
+        elif sys.argv[1] == "hp.plotter":
             print("Running Plotter")
             for i in epochs_list:
                 for j in learning_rate_list:
@@ -67,21 +48,21 @@ def main():
                     x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, i, j)
                     filename = "../figs/TEST_LINR_" + str(i) + "_" + str(j) + ".png"
                     title = "Basic Linear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j)
-                    plotter(x, y, tx, ty, filename, title, True)
+                    hp.plotter(x, y, tx, ty, filename, title, True)
                     print("Finished Linear Regression " + str(i) + " " + str(j))
 
                     print("Starting Logistic Regression " + str(i) + " " + str(j))
                     x, y, tx, ty = logr.logistic_regression(train_X, train_y, test_X, test_y, i, j)
                     filename = "../figs/TEST_LOGR_" + str(i) + "_" + str(j) + ".png"
                     title = "Basic Logistic Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j)
-                    plotter(x, y, tx, ty, filename, title, True)
+                    hp.plotter(x, y, tx, ty, filename, title, True)
                     print("Finished Logistic Regression " + str(i) + " " + str(j))
 
                     print("Starting Neural Network " + str(i) + " " + str(j))
                     x, y, tx, ty = nn.neural_network(train_X, train_y, test_X, test_y, i, j)
                     filename = "../figs/TEST_NN_" + str(i) + "_" + str(j) + ".png"
                     title = "Neural Network, Epochs=" + str(i) + ", Learning Rate=" + str(j) + "\nHidden ReLu layer, Output tanh layer"
-                    plotter(x, y, tx, ty, filename, title, True)
+                    hp.plotter(x, y, tx, ty, filename, title, True)
                     print("Finished Neural Network " + str(i) + " " + str(j))
 
                     print("\nPlotted epochs " + str(i) + " and learning rate " + str(j) + "\n")
@@ -92,7 +73,7 @@ def main():
             title = "Basic Linear Regression, Epochs=" + i + ", Learning Rate=" + j
             print("Running Linear Regression")
             x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, int(i), float(j))
-            plotter(x, y, tx, ty, "", title, False)
+            hp.plotter(x, y, tx, ty, "", title, False)
 
         elif sys.argv[1] == "linr_break":
             i = 100
@@ -118,7 +99,7 @@ def main():
             title = "Basic Logistic Regression, Epochs=" + i + ", Learning Rate=" + j
             print("Running Logistic Regression")
             x, y, tx, ty = logr.logistic_regression(train_X, train_y, test_X, test_y, int(i), float(j))
-            plotter(x, y, tx, ty, "", title, False)
+            hp.plotter(x, y, tx, ty, "", title, False)
 
         elif sys.argv[1] == "logr_break":
             i = 100
@@ -144,7 +125,7 @@ def main():
             title = "Neural Network, Epochs=" + i + ", Learning Rate=" + j + "\nHidden ReLu layer, Output tanh layer"
             print("Running Neural Network")
             x, y, tx, ty = nn.neural_network(train_X, train_y, test_X, test_y, int(i), float(j))
-            plotter(x, y, tx, ty, "", title, False)
+            hp.plotter(x, y, tx, ty, "", title, False)
 
         elif sys.argv[1] == "svm":
             i = input("How many epochs? ")

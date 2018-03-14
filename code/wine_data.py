@@ -52,14 +52,14 @@ column_list = list(ds.columns)[:-1]
 norm_ds = normalise_ds(ds, column_list)
 no_outliers_ds = rm_outliers_ds(norm_ds, hp.THRESHOLD, column_list[0:-1])
 print("The range in wine quality is {0}".format(np.sort(no_outliers_ds['quality'].unique())))
-no_outliers_ds.groupby(['quality']).count()
+# no_outliers_ds.groupby(['quality']).count()
 copy_ds = no_outliers_ds.copy()
 copy_ds.to_csv('../data/winequality-fixed.csv', index=False)
 
-bins = [3, 5, 9]
-copy_ds['category'] = pd.cut(copy_ds.quality, bins, labels = ['bad', 'good'], include_lowest = True)
-print("\nGood:\n", copy_ds.loc[copy_ds.loc[:,'category'] == 'good',['quality', 'category']].describe())
-print("\nBad:\n", copy_ds.loc[copy_ds.loc[:,'category'] == 'bad',['quality', 'category']].describe())
-copy_ds.groupby(['category']).count()
-fixed_ds = copy_ds.copy()
-fixed_ds.to_csv('../data/winequality-fixed-categories.csv', index=False)
+# bins = [3, 5, 9]
+# copy_ds['category'] = pd.cut(copy_ds.quality, bins, labels = ['bad', 'good'], include_lowest = True)
+# print("\nGood:\n", copy_ds.loc[copy_ds.loc[:,'category'] == 'good',['quality', 'category']].describe())
+# print("\nBad:\n", copy_ds.loc[copy_ds.loc[:,'category'] == 'bad',['quality', 'category']].describe())
+# # copy_ds.groupby(['category']).count()
+# fixed_ds = copy_ds.copy()
+# fixed_ds.to_csv('../data/winequality-fixed-categories.csv', index=False)
