@@ -8,14 +8,14 @@ def calc_error(_X, _y, _W, _b):
     cost = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=pred, labels=_y))
     return pred, cost
 
-def calc_error_L1(_X, _y, _W, _b, _scale):
+def calc_error_L1(_X, _y, _W, _b, _scale=0.1):
     L1 = tf.contrib.layers.l1_regularizer(scale = _scale)
     reg_cost = tf.contrib.layers.apply_regularization(L1, [_W])
     pred, cost = calc_error(_X, _y, _W, _b)
     cost += reg_cost
     return pred, cost
 
-def calc_error_L2(_X, _y, _W, _b, _scale):
+def calc_error_L2(_X, _y, _W, _b, _scale=0.1):
     L2 = tf.contrib.layers.l2_regularizer(scale = _scale)
     reg_cost = tf.contrib.layers.apply_regularization(L2, [_W])
     pred, cost = calc_error(_X, _y, _W, _b)

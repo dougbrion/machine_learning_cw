@@ -2,7 +2,6 @@ import helpers as hp
 import linear_regression as linr
 import logistic_regression as logr
 import neural_network as nn
-import support_vector_machine as svm
 import sys
 import numpy as np
 import random
@@ -11,6 +10,9 @@ import matplotlib.pyplot as plt
 
 learning_rate_list = [0.1, 0.001, 0.0001, 0.00001]
 epochs_list = [100, 500, 1000, 5000, 10000, 50000]
+
+regularisation = 0 
+cross_val = True
 
 def main():
     hp.intro()
@@ -32,10 +34,7 @@ def main():
     train_X, train_y, test_X, test_y = hp.random_train_test(X, y, training_size)
 
     if len(sys.argv) == 2:
-        if sys.argv[1] == "testsuite":
-            print("Running Test Suite")
-
-        elif sys.argv[1] == "hp.plotter":
+        if sys.argv[1] == "hp.plotter":
             print("Running Plotter")
             for i in epochs_list:
                 for j in learning_rate_list:
@@ -67,16 +66,16 @@ def main():
             j = input("What learning rate? ")
             title = "Basic Linear Regression, Epochs=" + i + ", Learning Rate=" + j
             print("Running Linear Regression")
-            # x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, int(i), float(j))
-            linr.linear_regression(train_X, train_y, test_X, test_y, int(i), float(j))
-            # hp.plotter(title, x, y, tx, ty)
+            x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
+            # linr.linear_regression(train_X, train_y, test_X, test_y, int(i), float(j))
+            hp.plotter(title, x, y, tx, ty)
 
         elif sys.argv[1] == "linr_break":
             i = 100
             j = 0.31
             incr = 0.01
             for n in range(0,6):
-                x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, i, j)
+                x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, i, j, regularisation, cross_val)
                 learning_rate = "Learning Rate=" + "{:.2f}".format(j)
                 plt.plot(x, y, label=learning_rate)
                 plt.title("Basic Linear Regression, Epochs=100, Learning Rate=variable")
@@ -94,7 +93,8 @@ def main():
             j = input("What learning rate? ")
             title = "Basic Logistic Regression, Epochs=" + i + ", Learning Rate=" + j
             print("Running Logistic Regression")
-            x, y, tx, ty = logr.logistic_regression(train_X, train_y, test_X, test_y, int(i), float(j))
+            # logr.logistic_regression(train_X, train_y, test_X, test_y, int(i), float(j))
+            x, y, tx, ty = logr.logistic_regression(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
             hp.plotter(title, x, y, tx, ty)
 
         elif sys.argv[1] == "logr_break":
@@ -102,7 +102,7 @@ def main():
             j = 0.31
             incr = 0.01
             for n in range(0,6):
-                x, y, tx, ty = logr.logistic_regression(train_X, train_y, test_X, test_y, i, j)
+                x, y, tx, ty = logr.logistic_regression(train_X, train_y, test_X, test_y, i, j, regularisation, cross_val)
                 learning_rate = "Learning Rate=" + "{:.2f}".format(j)
                 plt.plot(x, y, label=learning_rate)
                 plt.title("Basic Logistic Regression, Epochs=100, Learning Rate=variable")
@@ -120,14 +120,8 @@ def main():
             j = input("What learning rate? ")
             title = "Neural Network, Epochs=" + i + ", Learning Rate=" + j + "\nHidden ReLu layer, Output tanh layer"
             print("Running Neural Network")
-            x, y, tx, ty = nn.neural_network(train_X, train_y, test_X, test_y, int(i), float(j), 0, True)
+            x, y, tx, ty = nn.neural_network(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
             hp.plotter(title, x, y, tx, ty)
-
-        elif sys.argv[1] == "svm":
-            i = input("How many epochs? ")
-            j = input("What learning rate? ")
-            print("Running Support Vector Machine")
-            x, y, tx, ty = svm.support_vector_machine(train_X, train_y, test_X, test_y, int(i), float(j))
         else:
             print("Argument was not valid")
     else:

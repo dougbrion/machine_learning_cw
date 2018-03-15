@@ -70,17 +70,6 @@ def random_train_test(_X, _y, _train_size):
         test_y_sample = _y[test_indexes]
         return train_X_sample, train_y_sample, test_X_sample, test_y_sample
 
-# 10 fold cross validaiton split
-def cross_validation_split(data):
-    print("Splitting Data...")
-    n = len(data)
-    random.shuffle(data)
-
-    output = np.array_split(data, p.CV_SPLIT)
-
-    return output
-
-    
 def data_split_n(_X, _y, _n):
     x_size = len(_X)
     y_size = len(_y)
@@ -89,6 +78,7 @@ def data_split_n(_X, _y, _n):
     else:
         random.shuffle(_X)
         random.shuffle(_y)
+        print("asdfjkahsdfja: ", type(_X))
         
         out_X = np.array_split(_X, _n)
         out_y = np.array_split(_y, _n)
@@ -143,12 +133,12 @@ def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs
     test(_sess, XyWb, _cost, _train_X, _train_y, _type)
     test(_sess, XyWb, _cost, _test_X, _test_y, _type)
 
-    plt.plot(_test_X, _test_y, 'bo', label='Testing data')
-    plt.plot(_train_X, tf.matmul(tf.tranpose(_sess.run(W)), _train_X) + _sess.run(b), label='Fitted line')
-    plt.legend()
-    plt.show()
+    # plt.plot(_test_X, _test_y, 'bo', label='Testing data')
+    # plt.plot(_train_X, np.dot(_train_X, _sess.run(W)) + _sess.run(b), label='Fitted line')
+    # plt.legend()
+    # plt.show()
     # print(end_cost)
-    # return training_x_axis, training_y_axis, test_x_axis, test_y_axis
+    return training_x_axis, training_y_axis, test_x_axis, test_y_axis
 
 def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs, _rate,  _type, _num_fold=10):
     X, y, W, b = expand(_XyWb)
@@ -173,55 +163,69 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
     else:
         overall_cost = 0
         split_X, split_y = data_split_n(_train_X, _train_y, _num_fold)
+        # print(type(split_X[1]))
+        # print(type(split_y[1]))
+        # print(split_X[1])
+        # print(split_y[1])
 
-        for i in range(_num_fold):       
-            _sess.run(init)
-            for epoch in range(_epochs):
-                cost_sum = 0
-                blah = 0
-                for j in range(_num_fold):
-
-                    if j == i:
-                        continue
-
-                    train_X = split_X[j]
-                    train_y = split_y[j]
-
-                    _, training_cost = _sess.run([_opt, _cost], feed_dict={X: train_X, y: train_y})
-                    test_cost = _sess.run(_cost, feed_dict={X: _test_X, y: _test_y})
-
-                    if _type == "log":
-                        training_cost = np.exp(training_cost)
-                        test_cost = np.exp(test_cost)
-
+        _sess.run(init)
         
-                    cost_sum += training_cost
-                    blah += test_cost
+        for epoch in range(_epochs):
+            
+            for i in range(_num_fold):       
+                training_cost_sum = 0
+                testing_cost_sum = 0
+                # train_X = np.ndarray(shape=(1,11), dtype=float)
+                # train_y = np.ndarray(shape=(1,1), dtype=float)
+                # print(train_X)
+                if i == 0:
+                    train_X = split_X[1]
+                    train_y = split_y[1]
+                else:
+                    train_X = split_X[1]
+                    train_y = split_y[1]
 
+                for j in range(_num_fold):
+                    if j != i:
+                        if j > 1:
+                            print(train_X.shape)
+                            # print(type(split_X[j]))
+                            np.append(train_X, split_X[j])
+                            np.append(train_y, split_y[j])
 
-                cost_sum /= (_num_fold - 1)
-                blah /= (_num_fold - 1)
+                _, training_cost = _sess.run([_opt, _cost], feed_dict={X: train_X, y: train_y})
+                testing_cost = _sess.run(_cost, feed_dict={X: split_X[i], y: split_y[i]})
 
-                if (epoch % 10) == 0:
-                    training_x_axis.append(epoch + 1)
-                    training_y_axis.append(cost_sum)
-                    testing_x_axis.append(epoch + 1)
-                    testing_y_axis.append(blah)
+                if _type == "log":
+                    training_cost = np.exp(training_cost)
+                    testing_cost = np.exp(testing_cost)
+
+                training_cost_sum += training_cost
+                testing_cost_sum += testing_cost
+
+            training_cost_sum /= (_num_fold - 1)
+            testing_cost_sum /= (_num_fold - 1)
+
+            if (epoch % 10) == 0:
+                training_x_axis.append(epoch + 1)
+                training_y_axis.append(training_cost)
+                testing_x_axis.append(epoch + 1)
+                testing_y_axis.append(testing_cost)
 
                 # if (epoch + 1) % 50 == 0:
                     # print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(training_cost), "W=", _sess.run(W), "b=", _sess.run(b))
 
-            print("\nOptimization Finished!\n")
+        print("\nOptimization Finished!\n")
 
-            XyWb = [X, y, W, b]
-            cost = test(_sess, XyWb, _cost, split_X[i], split_y[i], _type)
-            overall_cost += cost
-
+            # XyWb = [X, y, W, b]
+            # cost = test(_sess, XyWb, _cost, split_X[i], split_y[i], _type)
+            # overall_cost += cost
+            # print(overall_cost)
             # training_x_axis.append(i)
             # training_y_axis.append(cost)
             
-        overall_cost /= _num_fold
-        print(overall_cost)
+        # overall_cost /= _num_fold
+        # print(overall_cost)
         # training_x_axis.append(_num_fold)
         # training_y_axis.append(overall_cost)
         return training_x_axis, training_y_axis, testing_x_axis, testing_y_axis

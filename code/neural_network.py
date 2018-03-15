@@ -58,10 +58,10 @@ def neural_network(_train_X, _train_y, _test_X, _test_y, _epochs, _rate,  _regul
     print("Regularisation: ", _regularisation)
     if _regularisation == 1:
         L1 = tf.contrib.layers.l1_regularizer(scale = 0.1)
-        reg_cost = tf.contrib.layers.apply_regularization(L1, [W])
+        reg_cost = tf.contrib.layers.apply_regularization(L1, W)
     elif _regularisation == 2:
         L2 = tf.contrib.layers.l2_regularizer(scale = 0.1)
-        reg_cost = tf.contrib.layers.apply_regularization(L2, [W])
+        reg_cost = tf.contrib.layers.apply_regularization(L2, W)
     else:
         reg_cost = 0
     
