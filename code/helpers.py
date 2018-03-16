@@ -51,7 +51,13 @@ def test(_sess, _XyWb, _cost, _test_X, _test_y, _type):
     if _type == "log":
         cost = np.exp(cost)
     
-    print("Cost=", cost, "W=", _sess.run(W), "b=", _sess.run(b), '\n')
+    elif _type == "nn":
+        cost = np.sqrt(cost)
+
+            
+    
+    # print("Cost=", cost, "W=", _sess.run(W), "b=", _sess.run(b), '\n')
+    print("Cost=", cost)
     return cost
 
 def random_train_test(_X, _y, _train_size):
@@ -113,12 +119,17 @@ def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs
     _sess.run(init)
 
     for epoch in range(_epochs):
-        _, training_cost = _sess.run([_opt, _cost], feed_dict={X: _train_X, y: _train_y})
+        _sess.run(_opt, feed_dict={X: _train_X, y: _train_y})
+        training_cost = _sess.run(_cost, feed_dict={X: _train_X, y: _train_y})
         test_cost = _sess.run(_cost, feed_dict={X: _test_X, y: _test_y})
 
         if _type == "log":
             training_cost = np.exp(training_cost)
             test_cost = np.exp(test_cost)
+        
+        elif _type == "nn":
+            training_cost = np.sqrt(training_cost)
+            test_cost = np.sqrt(test_cost)
             
         if (epoch % 10) == 0:
             training_x_axis.append(epoch + 1)
@@ -131,15 +142,37 @@ def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs
         
     print("\nOptimization Finished!")
     XyWb = [X, y, W, b]
+    print("Training")
     test(_sess, XyWb, _cost, _train_X, _train_y, _type)
+    print("Testing")
     test(_sess, XyWb, _cost, _test_X, _test_y, _type)
+    # slope = _sess.run(W)
+    # print(slope)
+    # y_intercept = _sess.run(b)
+    # print(y_intercept)
+
+    # # Get best fit line
+    # best_fit = []
+    # for i in _train_X:
+    #     best_fit.append(tf.matmul(slope, [i + y_intercept]))
+    
+    # Plot the result
+    # plt.plot(_train_X, _train_y, 'o', label='Data Points')
+    # plt.plot(_train_X, best_fit, 'r-', label='Best fit line', linewidth=3)
+    # plt.legend(loc='upper left')
+    # plt.title('Sepal Length vs Pedal Width')
+    # plt.xlabel('Pedal Width')
+    # plt.ylabel('Sepal Length')
+    # plt.show()
 
     # plt.plot(_test_X, _test_y, 'bo', label='Testing data')
     # plt.plot(_train_X, np.dot(_train_X, _sess.run(W)) + _sess.run(b), label='Fitted line')
     # plt.legend()
     # plt.show()
     # print(end_cost)
-    return training_x_axis, training_y_axis, test_x_axis, test_y_axis
+    return training_x_axis, training_y_axis, test_x_axis, test_y_axis    
+    # return _train_X, _train_y, _train_X, best_fit
+
 
 def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs, _rate,  _type, _num_fold=10):
     X, y, W, b = expand(_XyWb)
@@ -176,10 +209,6 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
             for i in range(_num_fold):       
                 training_cost_sum = 0
                 testing_cost_sum = 0
-                # train_X = np.ndarray(shape=(1,11), dtype=float)
-                # train_y = np.ndarray(shape=(1,1), dtype=float)
-                # print(train_X)
-                # print(train_y)
                 
                 if i == 0:
                     train_X = split_X[1]
@@ -187,22 +216,10 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
                 else:
                     train_X = split_X[0]
                     train_y = split_y[0]
-                # print(train_X)
-                # print(train_y)
+
                 for j in range(_num_fold):
                     if j != i:
                         if j > 1:
-                            # print(train_X.shape)
-                            # print(split_X[j].shape)
-                            # print(split_X[j].shape[0])
-                            # for el_X in split_X[j]:
-                            #     np.append(train_X, el_X)
-                            #     print(el_X)
-                            # for el_y in split_y[j]:
-                            #     np.append(train_y, el_y)
-                            # print(type(split_X[j]))
-                            # print("SHAPE TRAIN: ", train_X.shape)
-                            # print("SHAPE SPLIT: ", split_X[j].shape)
                             train_X = np.append(train_X, split_X[j], axis=0)
                             train_y = np.append(train_y, split_y[j], axis=0)
 

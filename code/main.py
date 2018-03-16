@@ -2,19 +2,27 @@ import helpers as hp
 import linear_regression as linr
 import logistic_regression as logr
 import neural_network as nn
+import elastic_net as en
 import sys
 import numpy as np
 import random
+import tensorflow as tf
+
+# seed = 13
+# np.random.seed(seed)
+# tf.set_random_seed(seed)
+
 
 import matplotlib.pyplot as plt
 
-learning_rate_list = [0.1, 0.001, 0.0001, 0.00001]
-epochs_list = [100, 500, 1000, 5000, 10000, 50000]
 
-regularisation = 0 
-cross_val = True
 
 def main():
+    learning_rate_list = [0.1, 0.001, 0.0001, 0.00001]
+    epochs_list = [100, 500, 1000, 5000, 10000, 50000]
+
+    regularisation = 1, 0.01    
+    cross_val = False
     hp.intro()
     train_percent = int(input("Enter percentage of data for training: "))
     while train_percent < 0 or train_percent > 100:
@@ -87,33 +95,40 @@ def main():
                 j += incr
                 print(n)
             plt.show()
-
-        elif sys.argv[1] == "logr":
+        
+        elif sys.argv[1] == "elastic":
             i = input("How many epochs? ")
             j = input("What learning rate? ")
-            title = "Basic Logistic Regression, Epochs=" + i + ", Learning Rate=" + j
-            print("Running Logistic Regression")
-            # logr.logistic_regression(train_X, train_y, test_X, test_y, int(i), float(j))
-            x, y, tx, ty = logr.logistic_regression(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
+            title = "Elastic Net  LinearRegression, Epochs=" + i + ", Learning Rate=" + j
+            print("Running Elastic Net Regression")
+            x, y, tx, ty = en.elastic_net(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
             hp.plotter(title, x, y, tx, ty)
 
-        elif sys.argv[1] == "logr_break":
-            i = 100
-            j = 0.31
-            incr = 0.01
-            for n in range(0,6):
-                x, y, tx, ty = logr.logistic_regression(train_X, train_y, test_X, test_y, i, j, regularisation, cross_val)
-                learning_rate = "Learning Rate=" + "{:.2f}".format(j)
-                plt.plot(x, y, label=learning_rate)
-                plt.title("Basic Logistic Regression, Epochs=100, Learning Rate=variable")
-                plt.xlabel("Number of Epochs")
-                plt.ylabel("Training Error")
-                plt.ylim(0, 100)
-                plt.legend()
-                plt.grid(linestyle='-')
-                j += incr
-                print(n)
-            plt.show()
+        # elif sys.argv[1] == "logr":
+        #     i = input("How many epochs? ")
+        #     j = input("What learning rate? ")
+        #     title = "Basic Logistic Regression, Epochs=" + i + ", Learning Rate=" + j
+        #     print("Running Logistic Regression")
+        #     x, y, tx, ty = logr.logistic_regression(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
+        #     hp.plotter(title, x, y, tx, ty)
+
+        # elif sys.argv[1] == "logr_break":
+        #     i = 100
+        #     j = 0.31
+        #     incr = 0.01
+        #     for n in range(0,6):
+        #         x, y, tx, ty = logr.logistic_regression(train_X, train_y, test_X, test_y, i, j, regularisation, cross_val)
+        #         learning_rate = "Learning Rate=" + "{:.2f}".format(j)
+        #         plt.plot(x, y, label=learning_rate)
+        #         plt.title("Basic Logistic Regression, Epochs=100, Learning Rate=variable")
+        #         plt.xlabel("Number of Epochs")
+        #         plt.ylabel("Training Error")
+        #         plt.ylim(0, 100)
+        #         plt.legend()
+        #         plt.grid(linestyle='-')
+        #         j += incr
+        #         print(n)
+        #     plt.show()
 
         elif sys.argv[1] == "nn":
             i = input("How many epochs? ")
@@ -122,6 +137,46 @@ def main():
             print("Running Neural Network")
             x, y, tx, ty = nn.neural_network(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
             hp.plotter(title, x, y, tx, ty)
+        
+        elif sys.argv[1] == "L1lambda":
+            i = input("How many epochs? ")
+            j = input("What learning rate? ")
+            init_reg = 0.001
+            for n in range(30):
+                regularisation = 1, init_reg
+                x, y, tx, ty = nn.neural_network(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
+                reg_l = "Reg Lambda=" + "{:.3f}".format(init_reg)
+                plt.plot(x, y, label="train" + reg_l)
+                plt.plot(tx, ty, label="test" + reg_l)
+                plt.title("Basic Linear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j))
+                plt.xlabel("Number of Epochs")
+                plt.ylabel("Training Error")
+                # plt.ylim(0, 100)
+                plt.legend()
+                plt.grid(linestyle='-')
+                init_reg += 0.001
+            plt.show()
+
+
+        elif sys.argv[1] == "L2lambda":
+            i = input("How many epochs? ")
+            j = input("What learning rate? ")
+            init_reg = 0.001
+            for i in range(7):
+                regularisation = 2, init_reg
+                x, y, tx, ty = nn.neural_network(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
+                reg_l = "Reg Lambda=" + "{:.2f}".format(init_reg)
+                plt.plot(x, y, label="train" + reg_l)
+                plt.plot(tx, ty, label="test" + reg_l)
+                plt.title("Basic Linear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j))
+                plt.xlabel("Number of Epochs")
+                plt.ylabel("Training Error")
+                # plt.ylim(0, 100)
+                plt.legend()
+                plt.grid(linestyle='-')
+                init_reg *= 2
+            plt.show()
+
         else:
             print("Argument was not valid")
     else:

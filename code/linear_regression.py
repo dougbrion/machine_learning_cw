@@ -21,18 +21,19 @@ def calc_error_L2(_X, _y, _W, _b, _scale=0.1):
     cost += reg_cost
     return pred, cost
 
-def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs=1000, _rate=0.001, _regularisation=0, _cross_val=False):
+def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate, _regularisation, _cross_val):
+    reg_type, reg_scale = _regularisation
     X = tf.placeholder(tf.float32, [None, hp.num_features(_train_X)], name="input")
     y = tf.placeholder(tf.float32, name="output")
 
     W = tf.Variable(tf.random_normal([hp.num_features(_train_X), 1], dtype=tf.float32), name="weight")
     b = tf.Variable(tf.random_normal([1], dtype=tf.float32), name="bias")
 
-    print("Regularisation: ", _regularisation)
-    if _regularisation == 1:
-        pred, cost = calc_error_L1(X, y, W, b)
-    elif _regularisation == 2:
-        pred, cost = calc_error_L2(X, y, W, b)
+    print("Regularisation: ", reg_type)
+    if reg_type == 1:
+        pred, cost = calc_error_L1(X, y, W, b, reg_scale)
+    elif reg_type == 2:
+        pred, cost = calc_error_L2(X, y, W, b, reg_scale)
     else:
         pred, cost = calc_error(X, y, W, b)
 
