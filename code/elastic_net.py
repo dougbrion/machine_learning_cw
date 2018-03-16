@@ -28,6 +28,8 @@ def calc_error_L2(_X, _y, _W, _b, _scale=0.1):
     return pred, cost
 
 def elastic_net(_train_X, _train_y, _test_X, _test_y, _epochs, _rate, _regularisation, _cross_val):
+
+    
     reg_type, reg_scale = _regularisation
     X = tf.placeholder(tf.float32, [None, hp.num_features(_train_X)], name="input")
     y = tf.placeholder(tf.float32, name="output")

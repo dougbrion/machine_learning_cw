@@ -197,10 +197,6 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
     else:
         overall_cost = 0
         split_X, split_y = data_split_n(_train_X, _train_y, _num_fold)
-        # print(type(split_X[1]))
-        # print(type(split_y[1]))
-        # print(split_X[1])
-        # print(split_y[1])
 
         _sess.run(init)
         
@@ -248,7 +244,7 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
         print("\nOptimization Finished!\n")
 
             # XyWb = [X, y, W, b]
-            # cost = test(_sess, XyWb, _cost, split_X[i], split_y[i], _type)
+        # cost = test(_sess, XyWb, _cost, split_X[i], split_y[i], _type)
             # overall_cost += cost
             # print(overall_cost)
             # training_x_axis.append(i)
@@ -273,3 +269,10 @@ def plotter(title, x, y, tx, ty, filename = "", save = False):
         plt.close()
     else:
         plt.show()
+    
+def questions():
+    i = input("How many epochs? ")
+    j = input("What learning rate? ")
+    reg_level = input("What regularisation: 0, 1 or 2? ")
+    scale = input("What scale for regularisation? ")
+    return i, j, reg_level, scale

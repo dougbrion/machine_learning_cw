@@ -7,22 +7,19 @@ import sys
 import numpy as np
 import random
 import tensorflow as tf
-
-# seed = 13
-# np.random.seed(seed)
-# tf.set_random_seed(seed)
-
-
 import matplotlib.pyplot as plt
 
 
 
 def main():
+        # make results reproducible
+    seed = 13
+    np.random.seed(seed)
+    tf.set_random_seed(seed)
     learning_rate_list = [0.1, 0.001, 0.0001, 0.00001]
     epochs_list = [100, 500, 1000, 5000, 10000, 50000]
 
     regularisation = 1, 0.01    
-    cross_val = False
     hp.intro()
     train_percent = int(input("Enter percentage of data for training: "))
     while train_percent < 0 or train_percent > 100:
@@ -32,6 +29,11 @@ def main():
     test_percent = 100 - train_percent
     print(test_percent, "% of the data will be used for testing")
     
+    if input("Would you like to use cross validation? (y/n)? ") == "y":
+        cross_val = True
+    else: 
+        cross_val = False
+
     ds = hp.load_ds(hp.PATH, hp.FIXED)
     X, y = hp.split(ds)
 
@@ -72,10 +74,13 @@ def main():
         elif sys.argv[1] == "linr":
             i = input("How many epochs? ")
             j = input("What learning rate? ")
+            cost_fn = input("Would you like a 1 or 2 cost function? ")
+            reg_level = input("What regularisation: 0, 1 or 2? ")
+            scale = input("What scale for regularisation? ")
+            regularisation = reg_level, scale
             title = "Basic Linear Regression, Epochs=" + i + ", Learning Rate=" + j
             print("Running Linear Regression")
-            x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
-            # linr.linear_regression(train_X, train_y, test_X, test_y, int(i), float(j))
+            x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, int(i), float(j), cost_fn, regularisation, cross_val)
             hp.plotter(title, x, y, tx, ty)
 
         elif sys.argv[1] == "linr_break":
@@ -95,7 +100,7 @@ def main():
                 j += incr
                 print(n)
             plt.show()
-        
+
         elif sys.argv[1] == "elastic":
             i = input("How many epochs? ")
             j = input("What learning rate? ")
@@ -131,8 +136,8 @@ def main():
         #     plt.show()
 
         elif sys.argv[1] == "nn":
-            i = input("How many epochs? ")
-            j = input("What learning rate? ")
+            i,j,reg_level,scale = hp.questions()
+            regularisation = reg_level, scale
             title = "Neural Network, Epochs=" + i + ", Learning Rate=" + j + "\nHidden ReLu layer, Output tanh layer"
             print("Running Neural Network")
             x, y, tx, ty = nn.neural_network(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
