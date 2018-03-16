@@ -31,6 +31,7 @@ def load_ds(_path, _infile):
 
 def split(_ds):
     data = _ds.values
+    random.shuffle(data)
     split = np.split(data, [11], axis=1)
     return split[0].astype(np.float32), split[1].astype(np.float32)
 
@@ -73,13 +74,13 @@ def random_train_test(_X, _y, _train_size):
 def data_split_n(_X, _y, _n):
     x_size = len(_X)
     y_size = len(_y)
+    delta_size = (y_size % _n)
+    new_size = y_size - delta_size
+    _X = _X[:-delta_size]
+    _y = _y[:-delta_size]
     if x_size != y_size:
         print("Error, X and y not same length")
     else:
-        random.shuffle(_X)
-        random.shuffle(_y)
-        print("asdfjkahsdfja: ", type(_X))
-        
         out_X = np.array_split(_X, _n)
         out_y = np.array_split(_y, _n)
         return out_X, out_y
@@ -178,20 +179,32 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
                 # train_X = np.ndarray(shape=(1,11), dtype=float)
                 # train_y = np.ndarray(shape=(1,1), dtype=float)
                 # print(train_X)
+                # print(train_y)
+                
                 if i == 0:
                     train_X = split_X[1]
                     train_y = split_y[1]
                 else:
-                    train_X = split_X[1]
-                    train_y = split_y[1]
-
+                    train_X = split_X[0]
+                    train_y = split_y[0]
+                # print(train_X)
+                # print(train_y)
                 for j in range(_num_fold):
                     if j != i:
                         if j > 1:
-                            print(train_X.shape)
+                            # print(train_X.shape)
+                            # print(split_X[j].shape)
+                            # print(split_X[j].shape[0])
+                            # for el_X in split_X[j]:
+                            #     np.append(train_X, el_X)
+                            #     print(el_X)
+                            # for el_y in split_y[j]:
+                            #     np.append(train_y, el_y)
                             # print(type(split_X[j]))
-                            np.append(train_X, split_X[j])
-                            np.append(train_y, split_y[j])
+                            # print("SHAPE TRAIN: ", train_X.shape)
+                            # print("SHAPE SPLIT: ", split_X[j].shape)
+                            train_X = np.append(train_X, split_X[j], axis=0)
+                            train_y = np.append(train_y, split_y[j], axis=0)
 
                 _, training_cost = _sess.run([_opt, _cost], feed_dict={X: train_X, y: train_y})
                 testing_cost = _sess.run(_cost, feed_dict={X: split_X[i], y: split_y[i]})
