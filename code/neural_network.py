@@ -32,6 +32,11 @@ def tanh_fn(_X, _inputs, _units):
     y = tf.nn.tanh(tf.add(tf.matmul(_X, W) , b))
     return y, W, b
 
+def calc_error_L1(_y, _pred):
+    print("Loss Function L1")
+    cost = tf.reduce_mean(tf.abs(_y - _pred))
+    return cost
+
 def cost_function(_y, _pred):
     cost = tf.reduce_mean(tf.square(_y - _pred))
     return cost
@@ -56,6 +61,8 @@ def neural_network(_train_X, _train_y, _test_X, _test_y, _epochs, _rate,  _regul
     y = tf.placeholder(tf.float32, name="output")
     pred, cost, W, b = layers(X, y)
 
+    mad = calc_error_L1(y, pred)
+
     print("Regularisation: ", _regularisation)
     if reg_type == 1:
         L1 = tf.contrib.layers.l1_regularizer(scale=reg_scale)
@@ -76,4 +83,4 @@ def neural_network(_train_X, _train_y, _test_X, _test_y, _epochs, _rate,  _regul
         if _cross_val == True:
             return hp.cross_validation(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "nn")
         else:
-            return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "nn")
+            return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, mad, _epochs, _rate, "nn")

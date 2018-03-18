@@ -6,6 +6,9 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{mathtools}
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
 
 % Include other packages here, before hyperref.
 
@@ -28,41 +31,100 @@
 
 \author{Douglas Brion\\
 Imperial College London\\
-01052925\\
+CID: 01052925\\
 {\tt\small db1415@ic.ac.uk}
-
+}
 
 \maketitle
 %\thispagestyle{empty}
 
 
 %%%%%%%%% BODY TEXT
-\section{First section}
+\section{Introduction}
 
-Please follow the steps outlined below when submitting your manuscript to
-the IEEE Computer Society Press.  This style guide now has several
-important modifications (for example, you are no longer warned against the
-use of sticky tape to attach your artwork to the paper), so all authors
-should read this new version.
+This report examines different approaches to predicting wine quality using the Wine Quality~\cite{WineQuality} dataset. This is a large dataset containing 4898 samples of white wines and 1599 of red. Throughout this report wine quality is examined using regression, attempting to predict the quality of a wine from various input parameters. Multiple learning methods are implemented, discussed and compared in order to obtain a predictor with the smallest test error possible.
 
 %-------------------------------------------------------------------------
-\subsection{Language}
+\section{Data Preparation}
+Both red and white wine datasets were available and it was decided to combine both into a single dataset consisting of 6497 samples in order to learn how to predict the quality of either a red or white wine. 
 
-All manuscripts must be in English.
+The data provided in the now combined dataset was not normalised, therefore each attribute was normalised with respect to it's mean and standard deviation. Outliers over a threshold of $Thres = 5$ from each attribute were then removed to reduce noise in the dataset for training. This altered data was output to 
+\verb+winequality-fixed.csv+.
 
-\subsection{Dual submission}
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\linewidth]{samples.png}
+	\end{center}
+	\caption{The histogram for both white wine and red wine qualities.}
+	\label{fig:long}
+	\label{fig:onecol}
+\end{figure}
 
-Please refer to the author guidelines on the   web page for a
-discussion of the policy on dual submissions.
 
-\subsection{Paper length}
+\begin{table}[h]
+	\begin{center}
+		\begin{tabular}{|l|c|c|c|c|}
+			\hline
+			Attributes & Mean & Std & Min & Max \\
+			\hline
+			fixed acidity & 7.22 & 1.30 & 3.80 & 15.90 \\
+			volatile acidity & 0.34 & 0.16 & 0.08 & 1.58 \\
+			citric acid & 0.32 & 0.15 & 0.00 & 1.66 \\
+			residual sugar & 5.44 & 4.76 & 0.60 & 65.80 \\
+			chlorides & 0.06 & 0.04 & 0.01 & 0.61 \\
+			free sulfur dioxide & 30.53 & 17.75 & 1.00 & 289.00 \\
+			total sulfur dioxide & 115.74 & 56.52 & 6.00 & 440.00 \\
+			density & 0.99 & 0.00 & 0.98 & 1.04 \\
+			pH & 3.22 & 0.16 & 2.72 & 4.01 \\
+			sulphates & 0.53 & 0.15 & 0.22 & 2.00 \\
+			alcohol & 10.49 & 1.19 & 8.00 & 14.90 \\ 
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{The attribute statistics before normalisation and removal of outliers.}
+\end{table}
+
+\begin{table}[h]
+	\begin{center}
+		\begin{tabular}{|l|c|c|c|c|}
+			\hline
+			Attributes & Mean & Std & Min & Max \\
+			\hline
+			fixed acidity & -0.012 & 0.965 & -2.635 & 4.848 \\
+			volatile acidity & -0.005 & 0.984 & -1.577 & 4.800 \\
+			citric acid & -0.002 & 0.990 & -2.193 & 4.689 \\
+			residual sugar & -0.004 & 0.983 & -1.018 & 4.331 \\
+			chlorides & -0.049 & 0.740 & -1.343 & 4.966 \\
+			free sulfur dioxide & -0.008 & 0.968 & -1.664 & 4.957 \\
+			total sulfur dioxide & -0.001 & 0.998 & -1.942 & 4.437 \\
+			density & -0.004 & 0.979 & -2.530 & 2.999 \\
+			pH & 0.000 & 1.000 & -3.101 & 4.923 \\
+			sulphates & -0.017 & 0.936 & -2.092 & 4.898 \\
+			alcohol & 0.000 & 1.000 & -2.089 & 3.696 \\ 
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{The attribute statistics after normalisation and removal of outliers.}
+\end{table}
+
+\subsection{Learning approach}
+
+For consistency all the different regressions performances of each model with varying parameters will be measured using the same error metric, mean absolute deviation. 
+
+\begin{equation}
+\frac{1}{n} \sum_{i = 1}^{n} \abs{x_i - m(X)}
+\end{equation}
+
+This shall be used on the test error of each of the models for comparison as each model will required a different training error.
+
+\section{Learning Models}
 Papers, excluding the references section,
 must be no longer than requested pages in length. The references section
 will not be included in the page count, and there is no limit on the
 length of the references section. For example, a paper of four pages
 with two pages of references would have a total length of 10 pages.
 
-
+\subsection{Linear Regression}
 Overlength papers will simply not be reviewed.  This includes papers
 where the margins and formatting are deemed to have been significantly
 altered from those laid down by this style guide.  Note that this
@@ -256,20 +318,6 @@ enclose the citation number in square brackets, for
 example~\cite{Authors14}.  Where appropriate, include the name(s) of
 editors of referenced books.
 
-\begin{table}
-\begin{center}
-\begin{tabular}{|l|c|}
-\hline
-Method & Frobnability \\
-\hline\hline
-Theirs & Frumpy \\
-Yours & Frobbly \\
-Ours & Makes one's heart Frob\\
-\hline
-\end{tabular}
-\end{center}
-\caption{Results.   Ours is better.}
-\end{table}
 
 %-------------------------------------------------------------------------
 \subsection{Illustrations, graphs, and photographs}

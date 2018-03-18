@@ -44,6 +44,8 @@ def calc_error(_X, _y, _W, _b, _cost_fn):
         pred, cost = elastic_error(_X, _y, _W, _b)
     elif _cost_fn == 4:
         pred, cost = svm_error(_X, _y, _W, _b)
+    else:
+        pred, cost = calc_error_L1(_X, _y, _W, _b) 
     return pred, cost
 
 def calc_error_reg_L1(_X, _y, _W, _b, cost_fn, _scale):
@@ -70,6 +72,8 @@ def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate, _cos
     W = tf.Variable(tf.random_normal([hp.num_features(_train_X), 1], dtype=tf.float32), name="weight")
     b = tf.Variable(tf.random_normal([1], dtype=tf.float32), name="bias")
 
+    _, mad = calc_error_L1(X, y, W, b)
+
     if reg_type == 1:
         pred, cost = calc_error_reg_L1(X, y, W, b, _cost_fn, reg_scale)
     elif reg_type == 2:
@@ -84,4 +88,4 @@ def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate, _cos
         if _cross_val == True:
             return hp.cross_validation(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "lin")
         else:
-            return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "lin")
+            return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, mad, _epochs, _rate, "lin")

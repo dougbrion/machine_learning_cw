@@ -26,7 +26,7 @@ def rm_outliers_ds(ds, thres, cols):
     return ds
 
 def data_info(ds):
-    features_list = ds.columns.values[:-2]
+    features_list = ds.columns.values[:-1]
     labels_column = ds.columns.values[-1]
     print(ds.describe())
     print(ds.corr())
@@ -55,6 +55,7 @@ print("The range in wine quality is {0}".format(np.sort(no_outliers_ds['quality'
 # no_outliers_ds.groupby(['quality']).count()
 copy_ds = no_outliers_ds.copy()
 copy_ds.to_csv('../data/winequality-fixed.csv', index=False)
+data_info(copy_ds)
 
 # bins = [3, 5, 9]
 # copy_ds['category'] = pd.cut(copy_ds.quality, bins, labels = ['bad', 'good'], include_lowest = True)

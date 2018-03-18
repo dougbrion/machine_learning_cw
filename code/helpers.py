@@ -104,7 +104,7 @@ def random_sample(_X, _y, _size):
         y_sample = _y[index_sample]
         return X_sample, y_sample
 
-def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs, _rate, _type):
+def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _test_cost, _epochs, _rate, _type):
     X, y, W, b = expand(_XyWb)
 
     merged_summaries = tf.summary.merge_all()
@@ -121,7 +121,7 @@ def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs
     for epoch in range(_epochs):
         _sess.run(_opt, feed_dict={X: _train_X, y: _train_y})
         training_cost = _sess.run(_cost, feed_dict={X: _train_X, y: _train_y})
-        test_cost = _sess.run(_cost, feed_dict={X: _test_X, y: _test_y})
+        test_cost = _sess.run(_test_cost, feed_dict={X: _test_X, y: _test_y})
 
         if _type == "log":
             training_cost = np.exp(training_cost)
@@ -143,9 +143,9 @@ def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs
     print("\nOptimization Finished!")
     XyWb = [X, y, W, b]
     print("Training")
-    test(_sess, XyWb, _cost, _train_X, _train_y, _type)
+    test(_sess, XyWb, _test_cost, _train_X, _train_y, _type)
     print("Testing")
-    test(_sess, XyWb, _cost, _test_X, _test_y, _type)
+    test(_sess, XyWb, _test_cost, _test_X, _test_y, _type)
     # slope = _sess.run(W)
     # print(slope)
     # y_intercept = _sess.run(b)
@@ -157,17 +157,15 @@ def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs
     #     best_fit.append(tf.matmul(slope, [i + y_intercept]))
     
     # Plot the result
-    # plt.plot(_train_X, _train_y, 'o', label='Data Points')
-    # plt.plot(_train_X, best_fit, 'r-', label='Best fit line', linewidth=3)
-    # plt.legend(loc='upper left')
-    # plt.title('Sepal Length vs Pedal Width')
-    # plt.xlabel('Pedal Width')
-    # plt.ylabel('Sepal Length')
-    # plt.show()
-
+    # print("W: ", _sess.run(W))
+    # print("b: ", _sess.run(b))
+    # print(_test_X.shape)
+    # print(W.shape)
+    # best_fit = tf.matmul(_test_X, W)
+    # print(best_fit.shape)
     # plt.plot(_test_X, _test_y, 'bo', label='Testing data')
-    # plt.plot(_train_X, np.dot(_train_X, _sess.run(W)) + _sess.run(b), label='Fitted line')
-    # plt.legend()
+    # plt.plot(_test_X, np.dot(_train_X, _sess.run(W)) + _sess.run(b), label='Fitted line')
+    # # plt.legend()
     # plt.show()
     # print(end_cost)
     return training_x_axis, training_y_axis, test_x_axis, test_y_axis    

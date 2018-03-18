@@ -10,7 +10,6 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 
 
-
 def main():
         # make results reproducible
     seed = 13
@@ -34,6 +33,7 @@ def main():
     else: 
         cross_val = False
 
+    
     ds = hp.load_ds(hp.PATH, hp.FIXED)
     X, y = hp.split(ds)
 
@@ -42,6 +42,7 @@ def main():
     testing_size = y_size - training_size
 
     train_X, train_y, test_X, test_y = hp.random_train_test(X, y, training_size)
+    
 
     if len(sys.argv) == 2:
         if sys.argv[1] == "hp.plotter":
@@ -134,6 +135,33 @@ def main():
         #         j += incr
         #         print(n)
         #     plt.show()
+
+        elif sys.argv[1] == "histogram":
+            ds = hp.load_ds(hp.PATH, hp.FIXED)
+            data = ds['quality'].values
+            y = data.astype(np.int64)
+            print(y)
+            # list_y = np.concatenate(y)
+            # print(list_y)
+            count = np.bincount(y)
+            print(count)
+            count = count[3:]
+            print(count)
+            val_range = np.arange(10)
+            val_range = val_range[3:]
+            percent = np.multiply(np.divide(count, len(y)), 100)
+            print(val_range)
+            print(percent)
+            plt.bar(val_range, count, width=0.75, linewidth=0.5, edgecolor="black", color="grey")
+            plt.xlabel("Wine Quality Value")
+            plt.ylabel("Number of Wine Samples")
+            i = 0
+            for a, b in zip(val_range, count):
+                plt.text(a - 0.5, b + 20, str(b) + " Samples")
+                plt.text(a - 0.3, b + 90, "{:.2f}".format(percent[i]) + "%")
+                i = i + 1
+            # plt.annotate()
+            plt.show()
 
         elif sys.argv[1] == "nn":
             i,j,reg_level,scale = hp.questions()
