@@ -200,24 +200,26 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
 
         _sess.run(init)
         
-        for epoch in range(_epochs):
+        
             
-            for i in range(_num_fold):       
-                training_cost_sum = 0
-                testing_cost_sum = 0
-                
-                if i == 0:
-                    train_X = split_X[1]
-                    train_y = split_y[1]
-                else:
-                    train_X = split_X[0]
-                    train_y = split_y[0]
+        for i in range(_num_fold):       
+            training_cost_sum = 0
+            testing_cost_sum = 0
+            
+            if i == 0:
+                train_X = split_X[1]
+                train_y = split_y[1]
+            else:
+                train_X = split_X[0]
+                train_y = split_y[0]
 
-                for j in range(_num_fold):
-                    if j != i:
-                        if j > 1:
-                            train_X = np.append(train_X, split_X[j], axis=0)
-                            train_y = np.append(train_y, split_y[j], axis=0)
+            for j in range(_num_fold):
+                if j != i:
+                    if j > 1:
+                        train_X = np.append(train_X, split_X[j], axis=0)
+                        train_y = np.append(train_y, split_y[j], axis=0)
+
+            for epoch in range(_epochs):
 
                 _, training_cost = _sess.run([_opt, _cost], feed_dict={X: train_X, y: train_y})
                 testing_cost = _sess.run(_cost, feed_dict={X: split_X[i], y: split_y[i]})
@@ -226,17 +228,19 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
                     training_cost = np.exp(training_cost)
                     testing_cost = np.exp(testing_cost)
 
+                if (epoch % 10) == 0:
+                    training_x_axis.append((epoch + 1) + i * _epochs)
+                    training_y_axis.append(training_cost)
+                    testing_x_axis.append((epoch + 1) + i * _epochs)
+                    testing_y_axis.append(testing_cost)
+
                 training_cost_sum += training_cost
                 testing_cost_sum += testing_cost
 
             training_cost_sum /= (_num_fold - 1)
             testing_cost_sum /= (_num_fold - 1)
 
-            if (epoch % 10) == 0:
-                training_x_axis.append(epoch + 1)
-                training_y_axis.append(training_cost)
-                testing_x_axis.append(epoch + 1)
-                testing_y_axis.append(testing_cost)
+            
 
                 # if (epoch + 1) % 50 == 0:
                     # print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(training_cost), "W=", _sess.run(W), "b=", _sess.run(b))

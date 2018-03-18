@@ -72,15 +72,15 @@ def main():
                     print("\nPlotted epochs " + str(i) + " and learning rate " + str(j) + "\n")
         
         elif sys.argv[1] == "linr":
-            i = input("How many epochs? ")
-            j = input("What learning rate? ")
-            cost_fn = input("Would you like a 1 or 2 cost function? ")
-            reg_level = input("What regularisation: 0, 1 or 2? ")
-            scale = input("What scale for regularisation? ")
+            i = int(input("How many epochs? "))
+            j = float(input("What learning rate? "))
+            cost_fn = int(input("Would you like a 1 (L1), 2 (L2), 3 (Elastic Net), 4 (SVM) cost function? "))
+            reg_level = int(input("What regularisation: 0, 1 or 2? "))
+            scale = float(input("What scale for regularisation? "))
             regularisation = reg_level, scale
-            title = "Basic Linear Regression, Epochs=" + i + ", Learning Rate=" + j
+            title = "Basic Linear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j)
             print("Running Linear Regression")
-            x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, int(i), float(j), cost_fn, regularisation, cross_val)
+            x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, i, j, cost_fn, regularisation, cross_val)
             hp.plotter(title, x, y, tx, ty)
 
         elif sys.argv[1] == "linr_break":
