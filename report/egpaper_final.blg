@@ -3,53 +3,51 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: egpaper_final.aux
 The style file: ieee.bst
 Database file #1: egbib.bib
-Warning--I didn't find a database entry for "Alpher02"
-Warning--I didn't find a database entry for "Alpher03"
-Warning--I didn't find a database entry for "Alpher04"
-Warning--I didn't find a database entry for "Authors14"
 Too many commas in name 1 of "P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis" for entry WineQuality
 while executing---line 1073 of file ieee.bst
+Warning--empty journal in mckinneypandas
+Warning--empty year in mckinneypandas
 Too many commas in name 1 of "P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis" for entry WineQuality
 while executing---line 1116 of file ieee.bst
-You've used 1 entry,
+You've used 5 entries,
             2120 wiz_defined-function locations,
-            515 strings with 4083 characters,
-and the built_in function-call counts, 263 in all, are:
-= -- 22
-> -- 13
+            532 strings with 5226 characters,
+and the built_in function-call counts, 2414 in all, are:
+= -- 189
+> -- 243
 < -- 0
-+ -- 5
-- -- 4
-* -- 13
-:= -- 49
-add.period$ -- 3
-call.type$ -- 1
-change.case$ -- 5
++ -- 97
+- -- 92
+* -- 221
+:= -- 440
+add.period$ -- 13
+call.type$ -- 5
+change.case$ -- 61
 chr.to.int$ -- 0
-cite$ -- 1
-duplicate$ -- 7
-empty$ -- 23
-format.name$ -- 4
-if$ -- 53
+cite$ -- 7
+duplicate$ -- 42
+empty$ -- 111
+format.name$ -- 92
+if$ -- 444
 int.to.chr$ -- 0
-int.to.str$ -- 1
-missing$ -- 0
-newline$ -- 8
-num.names$ -- 2
-pop$ -- 10
+int.to.str$ -- 5
+missing$ -- 2
+newline$ -- 26
+num.names$ -- 10
+pop$ -- 78
 preamble$ -- 1
-purify$ -- 4
+purify$ -- 56
 quote$ -- 0
-skip$ -- 8
+skip$ -- 37
 stack$ -- 0
-substring$ -- 5
-swap$ -- 1
+substring$ -- 50
+swap$ -- 4
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 4
-warning$ -- 0
-while$ -- 2
-width$ -- 2
-write$ -- 12
+type$ -- 20
+warning$ -- 2
+while$ -- 12
+width$ -- 6
+write$ -- 48
 (There were 2 error messages)

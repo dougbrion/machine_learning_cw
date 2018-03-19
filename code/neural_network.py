@@ -2,6 +2,9 @@ import tensorflow as tf
 import helpers as hp
 import numpy as np
 
+
+
+
 def softmax_fn(_X, _inputs, _units):
     W = tf.Variable(tf.random_normal([_inputs, _units]), name='weight')
     b = tf.Variable(tf.random_normal([_units]), name='bias')
@@ -37,6 +40,14 @@ def calc_error_L1(_y, _pred):
     cost = tf.reduce_mean(tf.abs(_y - _pred))
     return cost
 
+def huber_error(_y, _pred, _delta=1.0):
+    residual = tf.abs(_y - _pred)
+    cond = tf.less(residual, _delta)
+    small_res = 0.5 * tf.square(residual)
+    large_res = _delta * residual - 0.5 * tf.square(_delta)
+    cost = tf.reduce_mean(tf.where(cond, small_res, large_res))
+    return cost
+
 def cost_function(_y, _pred):
     cost = tf.reduce_mean(tf.square(_y - _pred))
     return cost
@@ -62,6 +73,7 @@ def neural_network(_train_X, _train_y, _test_X, _test_y, _epochs, _rate,  _regul
     pred, cost, W, b = layers(X, y)
 
     mad = calc_error_L1(y, pred)
+    huber_loss = huber_error(y, pred)
 
     print("Regularisation: ", _regularisation)
     if reg_type == 1:
@@ -83,4 +95,4 @@ def neural_network(_train_X, _train_y, _test_X, _test_y, _epochs, _rate,  _regul
         if _cross_val == True:
             return hp.cross_validation(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "nn")
         else:
-            return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, mad, _epochs, _rate, "nn")
+            return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, huber_loss, _epochs, _rate, "nn")

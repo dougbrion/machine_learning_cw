@@ -132,7 +132,7 @@ def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _test_c
     for epoch in range(_epochs):
         _sess.run(_opt, feed_dict={X: _train_X, y: _train_y})
         training_cost = _sess.run(_cost, feed_dict={X: _train_X, y: _train_y})
-        test_cost = _sess.run(_test_cost, feed_dict={X: _test_X, y: _test_y})
+        test_cost = _sess.run(_cost, feed_dict={X: _test_X, y: _test_y})
 
         if _type == "log":
             training_cost = np.exp(training_cost)

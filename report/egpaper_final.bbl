@@ -1,5 +1,32 @@
 \begin{thebibliography}{1}\itemsep=-1pt
 
+\bibitem{tensorflow2015-whitepaper}
+M.~Abadi, A.~Agarwal, P.~Barham, E.~Brevdo, Z.~Chen, C.~Citro, G.~S. Corrado,
+  A.~Davis, J.~Dean, M.~Devin, S.~Ghemawat, I.~Goodfellow, A.~Harp, G.~Irving,
+  M.~Isard, Y.~Jia, R.~Jozefowicz, L.~Kaiser, M.~Kudlur, J.~Levenberg,
+  D.~Man\'{e}, R.~Monga, S.~Moore, D.~Murray, C.~Olah, M.~Schuster, J.~Shlens,
+  B.~Steiner, I.~Sutskever, K.~Talwar, P.~Tucker, V.~Vanhoucke, V.~Vasudevan,
+  F.~Vi\'{e}gas, O.~Vinyals, P.~Warden, M.~Wattenberg, M.~Wicke, Y.~Yu, and
+  X.~Zheng.
+\newblock {TensorFlow}: Large-scale machine learning on heterogeneous systems,
+  2015.
+\newblock Software available from tensorflow.org.
+
+\bibitem{Cortes1995}
+C.~Cortes and V.~Vapnik.
+\newblock Support-vector networks.
+\newblock {\em Machine Learning}, 20(3):273--297, Sep 1995.
+
+\bibitem{CrossValidation}
+S.~M.
+\newblock Cross-validatory choice and assessment of statistical predictions.,
+  1974.
+
+\bibitem{mckinneypandas}
+W.~McKinney.
+\newblock pandas: a foundational python library for data analysis and
+  statistics.
+
 \bibitem{WineQuality}
 F.~A. T.~M. P.~Cortez, A.~Cerdeira and J.~Reis.
 \newblock Modelling wine preferences by data mining from physicochemical
