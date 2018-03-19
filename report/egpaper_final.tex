@@ -7,6 +7,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{mathtools}
+\usepackage{multicol}
 
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}%
 
@@ -56,8 +57,7 @@ The data provided in the now combined dataset was not normalised, therefore each
 		\includegraphics[width=0.9\linewidth]{img/samples.png}
 	\end{center}
 	\caption{The histogram for both white wine and red wine qualities.}
-	\label{fig:long}
-	\label{fig:onecol}
+	\label{fig:hist}
 \end{figure}
 
 
@@ -82,6 +82,7 @@ The data provided in the now combined dataset was not normalised, therefore each
 		\end{tabular}
 	\end{center}
 	\caption{The attribute statistics before normalisation and removal of outliers.}
+	\label{tab:attributes}
 \end{table}
 
 \begin{table}[h]
@@ -105,6 +106,7 @@ The data provided in the now combined dataset was not normalised, therefore each
 		\end{tabular}
 	\end{center}
 	\caption{The attribute statistics after normalisation and removal of outliers.}
+	\label{tab:normalised}
 \end{table}
 
 The goal of this project will be to find a predictor with the best regression performance.
@@ -145,8 +147,7 @@ This is a fairly robust loss function which is not that affected by outliers.
 		\includegraphics[width=0.9\linewidth]{img/l1loss.png}
 	\end{center}
 	\caption{Training Error = $\sum_{i = 1}^{n} \abs{y_i - f(x_i)}$ (L1 loss), Epochs = 1000, Learning Rate = 0.02}
-	\label{fig:long}
-	\label{fig:onecol}
+	\label{fig:l1loss}
 \end{figure}
 
 \subsection{L2 loss function}
@@ -161,19 +162,47 @@ L_1 = \sum_{i = 1}^{n} (y_i - f(x_i))^2
 		\includegraphics[width=0.9\linewidth]{img/l2loss.png}
 	\end{center}
 	\caption{Training Error = $\sum_{i = 1}^{n} (y_i - f(x_i))^2$ (L2 loss), Epochs = 1000, Learning Rate = 0.02}
-	\label{fig:long}
-	\label{fig:onecol}
+	\label{fig:l2loss}
 \end{figure}
 
-Notice how the predictor using the L2 loss function in fig. 3. minimises the error much faster than the L1 loss in fig 2. and as outliers have been removed in data preparation the L2 loss is quite robust.
+Notice how the predictor using the L2 loss function in \ref{fig:l2loss}. minimises the error much faster than the L1 loss in \ref{fig:l1loss} and as outliers have been removed in data preparation the L2 loss is quite robust.
 
-\subsection{Linear Regression}
-Overlength papers will simply not be reviewed.  This includes papers
-where the margins and formatting are deemed to have been significantly
-altered from those laid down by this style guide.  Note that this
-\LaTeX\ guide already sets figure captions and references in a smaller font.
-The reason such papers will not be reviewed is that there is no provision for
-supervised revisions of manuscripts.  
+As the epochs are increased the optimiser is able to reduce the loss until no improvements can be made. The learning rate also greatly affects the rate at which the loss is minimised. However, if the learning rate is too high the predictor will not improve on the training data, as can be seen in \ref{fig:break}.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\linewidth]{img/linrbreak.png}
+	\end{center}
+	\caption{Training Error = $\sum_{i = 1}^{n} (y_i - f(x_i))^2$ (L2 loss), Epochs = 100, Learning Rate = variable}
+	\label{fig:break}
+\end{figure}
+
+\subsection{Improvements}
+These relatively simple models can be improved upon by adding regularisation. Regularisation is a technique used to prevent over fitting the data. Both L1 and L2 regularisation have been implemented, being the sum of the weights and sum of the square weights respectively. The regularisation term is added to the loss function, the terms for L1 and L2 look as follows:
+
+\noindent\begin{minipage}{.5\linewidth}
+	\begin{equation}
+	L_{1reg} = \lambda \sum_{i = 1}^{n} \abs{w_i}
+	\end{equation}
+\end{minipage}%
+\begin{minipage}{.5\linewidth}
+	\begin{equation}
+	L_{2reg} = \lambda \sum_{i = 1}^{n} w_i^2
+	\end{equation}
+\end{minipage}
+
+\section{More Advanced Algorithms}
+
+\subsection{Neural Network}
+The neural network implemented as a predictor for this project had 3 layers, 1 input, 1 hidden and 1 output. A single hidden layer was chosen as an increase in hidden layers did not result in a significant increase in predictor performance although it did lengthen training time.
+
+The number of nodes in the hidden was chosen using a heuristic of the number being the mean of the input and output layers, in this case resulting in 6 nodes.
+
+Each layer could be assigned when the network is constructed to have a specific activation function such as: TanH, Sigmoid, ReLU, SeLU and Softmax. It was found that during training a hidden ReLU resulted in the best out of sample test error and therefore was chosen. 
+
+\subsection{Support Vector Machine}
+
+\subsection{Elastic Net Regularisation}
 
 %-------------------------------------------------------------------------
 \subsection{The ruler}

@@ -87,15 +87,16 @@ def main():
 
         elif sys.argv[1] == "linr_break":
             i = 100
-            j = 0.31
+            j = 0.32
             incr = 0.01
-            for n in range(0,6):
-                x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, i, j, regularisation, cross_val)
+            colors = ['grey', 'black']
+            for n in range(0,2):
+                x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, i, j, 2, regularisation, cross_val)
                 learning_rate = "Learning Rate=" + "{:.2f}".format(j)
-                plt.plot(x, y, label=learning_rate, color='grey')
-                plt.title("Basic Linear Regression, Epochs=100, Learning Rate=variable")
+                plt.plot(x, y, label=learning_rate, color=colors[n])
+                plt.title("Basic Linear Regression, Epochs=100, Learning Rate=variable\n L2 loss function")
                 plt.xlabel("Number of Epochs")
-                plt.ylabel("Training Error")
+                plt.ylabel("Training Error (L2 loss)")
                 plt.ylim(0, 100)
                 plt.legend()
                 plt.grid(linestyle='-')
