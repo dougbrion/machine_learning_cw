@@ -270,11 +270,11 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
         return training_x_axis, training_y_axis, testing_x_axis, testing_y_axis
 
 def plotter(title, x, y, tx, ty, filename = "", save = False):
-    plt.plot(x, y, label='training')
-    plt.plot(tx, ty, label='test')
+    plt.plot(x, y, label='training', color='grey')
+    plt.plot(tx, ty, label='test', color='black')
     plt.title(title)
     plt.xlabel("Number of Epochs")
-    plt.ylabel("Training Error")
+    plt.ylabel("Training Error (L1 loss)")
     plt.grid(linestyle='-')
     plt.legend()
     if save == True:

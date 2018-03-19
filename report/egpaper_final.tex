@@ -53,7 +53,7 @@ The data provided in the now combined dataset was not normalised, therefore each
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.9\linewidth]{samples.png}
+		\includegraphics[width=0.9\linewidth]{img/samples.png}
 	\end{center}
 	\caption{The histogram for both white wine and red wine qualities.}
 	\label{fig:long}
@@ -107,22 +107,65 @@ The data provided in the now combined dataset was not normalised, therefore each
 	\caption{The attribute statistics after normalisation and removal of outliers.}
 \end{table}
 
+The goal of this project will be to find a predictor with the best regression performance.
+
 \subsection{Learning approach}
 
-For consistency all the different regressions performances of each model with varying parameters will be measured using the same error metric, mean absolute deviation. 
+For consistency all the different regressions performances of each model with varying parameters and training cost functions will be measured using the same error metric, the Huber Loss function. This is a good loss function for this regression problem as it is robust to outliers, for if the difference between the real and predicted value is small it will be squared, if large, the absolute value will be taken.
 
 \begin{equation}
-\frac{1}{n} \sum_{i = 1}^{n} \abs{x_i - m(X)}
+L_H = \begin{cases}
+\sum_{i = 1}^{n} \frac{1}{2} (y_i - f(x_i))^2, & for \abs{y_i - f(x_i)} \leq \delta. \\
+\sum_{i = 1}^{n} \delta \abs{y_i - f(x_i)} - \frac{1}{2} \delta^2, & otherwise.
+\end{cases}
 \end{equation}
 
 This shall be used on the test error of each of the models for comparison as each model will required a different training error.
 
-\section{Learning Models}
-Papers, excluding the references section,
-must be no longer than requested pages in length. The references section
-will not be included in the page count, and there is no limit on the
-length of the references section. For example, a paper of four pages
-with two pages of references would have a total length of 10 pages.
+To validate which model is best they will also be tested using the Mean Absolute Deviation error metric (MAD) which is often used to test regression performance.
+
+\section{Baseline Predictors}
+Several baseline predictors have been implemented and trained on the data. 
+
+A linear regression program was written in Python using Tensorflow. This linear model used an iterative method to alter the weights, with multiple loss functions tested. This proved useful as a framework for the more advanced algorithms implemented later on.
+
+For linear regression 2 basic loss functions were implemented first.
+
+\subsection{L1 loss function}
+The L1 loss function, least absolute deviations, tries to minimise the absolute difference between the predicted and real values. The sum of all the differences for all the samples can be described as follows:
+
+\begin{equation}
+L_1 = \sum_{i = 1}^{n} \abs{y_i - f(x_i)}
+\end{equation}
+
+This is a fairly robust loss function which is not that affected by outliers.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\linewidth]{img/l1loss.png}
+	\end{center}
+	\caption{Training Error = $\sum_{i = 1}^{n} \abs{y_i - f(x_i)}$ (L1 loss), Epochs = 1000, Learning Rate = 0.02}
+	\label{fig:long}
+	\label{fig:onecol}
+\end{figure}
+
+\subsection{L2 loss function}
+The L2 loss function, least square error, minimises the square difference between the predicted and real values. This value is much large than that of L1 loss and therefore is more affected by outliers, however, will optimise the predictor faster.
+
+\begin{equation}
+L_1 = \sum_{i = 1}^{n} (y_i - f(x_i))^2
+\end{equation}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\linewidth]{img/l2loss.png}
+	\end{center}
+	\caption{Training Error = $\sum_{i = 1}^{n} (y_i - f(x_i))^2$ (L2 loss), Epochs = 1000, Learning Rate = 0.02}
+	\label{fig:long}
+	\label{fig:onecol}
+\end{figure}
+
+Notice how the predictor using the L2 loss function in fig. 3. minimises the error much faster than the L1 loss in fig 2. and as outliers have been removed in data preparation the L2 loss is quite robust.
 
 \subsection{Linear Regression}
 Overlength papers will simply not be reviewed.  This includes papers

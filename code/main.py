@@ -80,7 +80,7 @@ def main():
             reg_level = int(input("What regularisation: 0, 1 or 2? "))
             scale = float(input("What scale for regularisation? "))
             regularisation = reg_level, scale
-            title = "Basic Linear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j)
+            title = "Basic Linear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j) +"\n L1 loss function"
             print("Running Linear Regression")
             x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, i, j, cost_fn, regularisation, cross_val)
             hp.plotter(title, x, y, tx, ty)
@@ -92,7 +92,7 @@ def main():
             for n in range(0,6):
                 x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, i, j, regularisation, cross_val)
                 learning_rate = "Learning Rate=" + "{:.2f}".format(j)
-                plt.plot(x, y, label=learning_rate)
+                plt.plot(x, y, label=learning_rate, color='grey')
                 plt.title("Basic Linear Regression, Epochs=100, Learning Rate=variable")
                 plt.xlabel("Number of Epochs")
                 plt.ylabel("Training Error")
