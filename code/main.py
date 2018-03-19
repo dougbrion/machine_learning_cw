@@ -8,6 +8,7 @@ import numpy as np
 import random
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import tensorflow.contrib.eager as tfe
 
 
 def main():
@@ -75,7 +76,7 @@ def main():
         elif sys.argv[1] == "linr":
             i = int(input("How many epochs? "))
             j = float(input("What learning rate? "))
-            cost_fn = int(input("Would you like a 1 (L1), 2 (L2), 3 (Elastic Net), 4 (SVM) cost function? "))
+            cost_fn = int(input("Would you like a 1 (L1), 2 (L2), 3 (Elastic Net), 4 (SVM), 5 (Huber Loss) cost function? "))
             reg_level = int(input("What regularisation: 0, 1 or 2? "))
             scale = float(input("What scale for regularisation? "))
             regularisation = reg_level, scale

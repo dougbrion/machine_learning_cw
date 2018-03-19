@@ -3,6 +3,7 @@ import numpy as np
 import tensorflow as tf
 import random
 import matplotlib.pyplot as plt
+# import tensorflow.contrib.eager as tfe
 
 PATH = "../data/"
 WHITE = "winequality-white.csv"
@@ -12,6 +13,16 @@ CATEGORIES = "winequality-fixed-categories.csv"
 
 THRESHOLD = 5
 LEARNING_RATE = 0.00001
+
+
+
+
+# tfe.enable_eager_execution()
+
+# def huber_loss(_X, _y, _W, _b, m=1.0):
+#     pred = _X * _W + _b
+#     t = _y - pred
+#     return t ** 2 if tf.abs(t) <= m else m * (2 * tf.abs(t) - m)
 
 def intro():
     print("###############################")
