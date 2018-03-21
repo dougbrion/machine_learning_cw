@@ -15,9 +15,9 @@ def seeder():
     np.random.seed(seed)
     tf.set_random_seed(seed)
 
-rate_list = [0.1, 0.1, 0.1, 0.1, 0.1]
-reg_list = [[0,0],[0,0],[0,0],[0,0],[0,0]]
-cost_list = [1,2,3,4,5]
+rate_list = [0.1, 0.01, 0.01, 0.1, 0.1]
+reg_list = [[0,0],[0,0],[0,0],[0,0],[1,0.002]]
+cost_list = [1,2,1,2,1]
 
 
 def main():
@@ -36,6 +36,8 @@ def main():
             hp.histogram()
         elif sys.argv[1] == "linr_plotter":
             plters.linr_plotter()
+        elif sys.argv[1] == "nn_plotter":
+            plters.nn_plotter()
         elif sys.argv[1] == "linr_cv":
             train_X, train_y, test_X, test_y = hp.cv_intro()
             x, y, tx, ty = linr.linear_regression_cv(train_X, train_y, test_X, test_y, 100, rate_list, cost_list, reg_list)
