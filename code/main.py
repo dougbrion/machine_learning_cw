@@ -77,13 +77,47 @@ def main():
             i = int(input("How many epochs? "))
             j = float(input("What learning rate? "))
             cost_fn = int(input("Would you like a 1 (L1), 2 (L2), 3 (Elastic Net), 4 (SVM), 5 (Huber Loss) cost function? "))
-            reg_level = int(input("What regularisation: 0, 1 or 2? "))
-            scale = float(input("What scale for regularisation? "))
+            reg_level = int(input("What regularisation: 0 (None), 1 or 2? "))
+            scale = 0
+            reg_str = ""
+            params = [1.,1.]
+            if reg_level != 0:
+                scale = float(input("What scale for regularisation? "))
+                reg_str = ", Regularisation=L" + str(reg_level) + ", Scale="  + str(scale)
             regularisation = reg_level, scale
-            title = "Basic Linear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j) +"\n L1 loss function"
+            loss_str = "L1"
+            if cost_fn == 1:
+                loss_str = "L1"
+            elif cost_fn == 2:
+                loss_str = "L2"
+            elif cost_fn == 3:
+                loss_str = "Elastic Net"
+                param1 = float(input("What Elastic Net Parameter 1, (Default 1.) "))
+                param2 = float(input("What Elastic Net Parameter 2, (Default 1.) "))
+                params = [param1, param2]
+            elif cost_fn == 4:
+                loss_str = "SVR"
+            elif cost_fn == 5:
+                loss_str = "Huber"
+            title = "Linear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j) +"\n Loss Function=" + loss_str + reg_str
             print("Running Linear Regression")
-            x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, i, j, cost_fn, regularisation, cross_val)
-            hp.plotter(title, x, y, tx, ty)
+            x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, i, j, cost_fn, regularisation, cross_val, params)
+            hp.plotter(title, x, y, tx, ty, train_percent)
+    
+        elif sys.argv[1] == "nn":
+            i = int(input("How many epochs? "))
+            j = float(input("What learning rate? "))
+            reg_level = int(input("What regularisation: 0 (None), 1 or 2? "))
+            scale = 0
+            reg_str = ""
+            if reg_level != 0:
+                scale = float(input("What scale for regularisation? "))
+                reg_str = ", Regularisation=L" + str(reg_level) + ", Scale="  + str(scale)
+            regularisation = reg_level, scale
+            title = "Neural Network, Epochs=" + str(i) + ", Learning Rate=" + str(j) + "\nHidden ReLU layer, Output ReLU layer" + reg_str
+            print("Running Neural Network")
+            x, y, tx, ty = nn.neural_network(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
+            hp.plotter(title, x, y, tx, ty, train_percent)
 
         elif sys.argv[1] == "linr_break":
             i = 100
@@ -112,32 +146,6 @@ def main():
             x, y, tx, ty = en.elastic_net(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
             hp.plotter(title, x, y, tx, ty)
 
-        # elif sys.argv[1] == "logr":
-        #     i = input("How many epochs? ")
-        #     j = input("What learning rate? ")
-        #     title = "Basic Logistic Regression, Epochs=" + i + ", Learning Rate=" + j
-        #     print("Running Logistic Regression")
-        #     x, y, tx, ty = logr.logistic_regression(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
-        #     hp.plotter(title, x, y, tx, ty)
-
-        # elif sys.argv[1] == "logr_break":
-        #     i = 100
-        #     j = 0.31
-        #     incr = 0.01
-        #     for n in range(0,6):
-        #         x, y, tx, ty = logr.logistic_regression(train_X, train_y, test_X, test_y, i, j, regularisation, cross_val)
-        #         learning_rate = "Learning Rate=" + "{:.2f}".format(j)
-        #         plt.plot(x, y, label=learning_rate)
-        #         plt.title("Basic Logistic Regression, Epochs=100, Learning Rate=variable")
-        #         plt.xlabel("Number of Epochs")
-        #         plt.ylabel("Training Error")
-        #         plt.ylim(0, 100)
-        #         plt.legend()
-        #         plt.grid(linestyle='-')
-        #         j += incr
-        #         print(n)
-        #     plt.show()
-
         elif sys.argv[1] == "histogram":
             ds = hp.load_ds(hp.PATH, hp.FIXED)
             data = ds['quality'].values
@@ -164,14 +172,6 @@ def main():
                 i = i + 1
             # plt.annotate()
             plt.show()
-
-        elif sys.argv[1] == "nn":
-            i,j,reg_level,scale = hp.questions()
-            regularisation = reg_level, scale
-            title = "Neural Network, Epochs=" + i + ", Learning Rate=" + j + "\nHidden ReLu layer, Output tanh layer"
-            print("Running Neural Network")
-            x, y, tx, ty = nn.neural_network(train_X, train_y, test_X, test_y, int(i), float(j), regularisation, cross_val)
-            hp.plotter(title, x, y, tx, ty)
         
         elif sys.argv[1] == "L1lambda":
             i = input("How many epochs? ")

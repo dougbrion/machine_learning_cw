@@ -208,8 +208,6 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
         split_X, split_y = data_split_n(_train_X, _train_y, _num_fold)
 
         _sess.run(init)
-        
-        
             
         for i in range(_num_fold):       
             training_cost_sum = 0
@@ -269,12 +267,14 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
         # training_y_axis.append(overall_cost)
         return training_x_axis, training_y_axis, testing_x_axis, testing_y_axis
 
-def plotter(title, x, y, tx, ty, filename = "", save = False):
-    plt.plot(x, y, label='training', color='grey')
-    plt.plot(tx, ty, label='test', color='black')
+def plotter(title, x, y, tx, ty, percent=100, filename = "", save = False):
+    train_label = "training " + str(percent) + "%"
+    test_label = "testing " +str(100 - percent) + "%"
+    plt.plot(x, y, label=train_label, color='grey')
+    plt.plot(tx, ty, label=test_label, color='black')
     plt.title(title)
     plt.xlabel("Number of Epochs")
-    plt.ylabel("Training Error (L1 loss)")
+    plt.ylabel("Training Error")
     plt.grid(linestyle='-')
     plt.legend()
     if save == True:
@@ -289,3 +289,5 @@ def questions():
     reg_level = input("What regularisation: 0, 1 or 2? ")
     scale = input("What scale for regularisation? ")
     return i, j, reg_level, scale
+
+    

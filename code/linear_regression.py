@@ -11,16 +11,17 @@ def huber_error(_X, _y, _W, _b, _delta=1.0):
     cost = tf.reduce_mean(tf.where(cond, small_res, large_res))
     return pred, cost
 
-def elastic_error(_X, _y, _W, _b):
+def elastic_error(_X, _y, _W, _b, _param1=1., _param2=1.):
     print("Elastic Net Loss Function")
     pred = tf.add(tf.matmul(_X, _W), _b)
-    elastic_param1 = tf.constant(1.)
-    elastic_param2 = tf.constant(1.)
-    l1_a_loss = tf.reduce_mean(tf.abs(_W))
-    l2_a_loss = tf.reduce_mean(tf.square(_W))
-    e1_term = tf.multiply(elastic_param1, l1_a_loss)
-    e2_term = tf.multiply(elastic_param2, l2_a_loss)
-    cost = tf.expand_dims(tf.add(tf.add(tf.reduce_mean(tf.square(_y - pred)), e1_term), e2_term), 0)    
+    param1 = tf.constant(_param1)
+    param2 = tf.constant(_param2)
+    print("Elastic Net Parameters are p1 ", _param1, _param2)
+    l1loss = tf.reduce_mean(tf.abs(_W))
+    l2loss = tf.reduce_mean(tf.square(_W))
+    elastic1 = tf.multiply(param1, l1loss)
+    elastic2 = tf.multiply(param2, l2loss)
+    cost = tf.expand_dims(tf.add(tf.add(tf.reduce_mean(tf.square(_y - pred)), elastic1), elastic2), 0)    
     return pred, cost
 
 def svm_error(_X, _y, _W, _b):
@@ -44,13 +45,14 @@ def calc_error_L2(_X, _y, _W, _b):
     cost = tf.reduce_mean(tf.square(_y - pred))
     return pred, cost
 
-def calc_error(_X, _y, _W, _b, _cost_fn):
+def calc_error(_X, _y, _W, _b, _cost_fn, _el_params=[1.,1.]):
     if _cost_fn == 1:
         pred, cost = calc_error_L1(_X, _y, _W, _b) 
     elif _cost_fn == 2:
         pred, cost = calc_error_L2(_X, _y, _W, _b)
     elif _cost_fn == 3:
-        pred, cost = elastic_error(_X, _y, _W, _b)
+        p1, p2 = _el_params
+        pred, cost = elastic_error(_X, _y, _W, _b, p1, p2)
     elif _cost_fn == 4:
         pred, cost = svm_error(_X, _y, _W, _b)
     elif _cost_fn == 5:
@@ -75,7 +77,7 @@ def calc_error_reg_L2(_X, _y, _W, _b, cost_fn, _scale):
     cost += reg_cost
     return pred, cost
 
-def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate, _cost_fn, _regularisation, _cross_val):
+def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate, _cost_fn, _regularisation, _cross_val, _el_params):
     reg_type, reg_scale = _regularisation
     X = tf.placeholder(tf.float32, [None, hp.num_features(_train_X)], name="input")
     y = tf.placeholder(tf.float32, name="output")
@@ -92,7 +94,7 @@ def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate, _cos
         pred, cost = calc_error_reg_L2(X, y, W, b, _cost_fn, reg_scale)
     else:
         print("No Regularisation")
-        pred, cost = calc_error(X, y, W, b, _cost_fn)
+        pred, cost = calc_error(X, y, W, b, _cost_fn, _el_params)
 
     optimizer = tf.train.GradientDescentOptimizer(_rate).minimize(cost)
     XyWb = [X, y, W, b]

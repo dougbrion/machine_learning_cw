@@ -24,7 +24,7 @@
 \def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
 
 % Pages are numbered in submission mode, and unnumbered in camera-ready
-\setcounter{page}{4321}
+\setcounter{page}{1}
 \begin{document}
 
 %%%%%%%%% TITLE
@@ -69,17 +69,17 @@ The data provided in the now combined dataset was not normalised, therefore each
 			\hline
 			Attributes & Mean & Std & Min & Max \\
 			\hline
-			fixed acidity & 7.22 & 1.30 & 3.80 & 15.90 \\
+			fixed acidity & 7.22 & 1.30 & 3.80 & 15.9 \\
 			volatile acidity & 0.34 & 0.16 & 0.08 & 1.58 \\
 			citric acid & 0.32 & 0.15 & 0.00 & 1.66 \\
-			residual sugar & 5.44 & 4.76 & 0.60 & 65.80 \\
+			residual sugar & 5.44 & 4.76 & 0.60 & 65.8 \\
 			chlorides & 0.06 & 0.04 & 0.01 & 0.61 \\
-			free sulfur dioxide & 30.53 & 17.75 & 1.00 & 289.00 \\
-			total sulfur dioxide & 115.74 & 56.52 & 6.00 & 440.00 \\
+			free sulfur dioxide & 30.5 & 17.8 & 1.00 & 289 \\
+			total sulfur dioxide & 116 & 56.5 & 6.00 & 440 \\
 			density & 0.99 & 0.00 & 0.98 & 1.04 \\
 			pH & 3.22 & 0.16 & 2.72 & 4.01 \\
 			sulphates & 0.53 & 0.15 & 0.22 & 2.00 \\
-			alcohol & 10.49 & 1.19 & 8.00 & 14.90 \\ 
+			alcohol & 10.5 & 1.19 & 8.00 & 14.9 \\ 
 			\hline
 		\end{tabular}
 	\end{center}
@@ -207,7 +207,15 @@ Each layer could be assigned when the network is constructed to have a specific 
 Neural networks have an advantage over standard linear regression that they can model non-linearities automatically however they are more likely to overfit the data so observing the out of sample error is especially important.
 
 \subsection{Support Vector Regression}
-The goal for a support vector regression~\cite{Cortes1995} predictor is to find a predication $f(x)$ like our other predictors however it should have at most $\epsilon$ deviation from the real value $y_i$ for all the in sample data.
+The goal for a support vector regression (SVR)~\cite{Cortes1995} predictor is to find a predication $f(x)$ like our other predictors however it should have at most $\epsilon$ deviation from the real value $y_i$ for all the in sample data.
+
+The loss function for SVR is as follows:
+
+\begin{equation}
+L_{SVR} = max(0, \sum_{i = 1}^{n} \abs{y_i - f(x_i)} - \epsilon)
+\end{equation}
+
+This loss function is known as the hinge loss.
 
 \subsection{Elastic Net Regularisation}
 
