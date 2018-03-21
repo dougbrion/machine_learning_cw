@@ -17,7 +17,7 @@ def seeder():
 
 rate_list = [0.1, 0.1, 0.1, 0.1, 0.1]
 reg_list = [[0,0],[0,0],[0,0],[0,0],[0,0]]
-cost_list = [1,1,1,1,1]
+cost_list = [1,2,3,4,5]
 
 
 def main():
