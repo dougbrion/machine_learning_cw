@@ -1,6 +1,7 @@
 import tensorflow as tf
 import helpers as hp
 import numpy as np
+import sys
 
 def huber_error(_X, _y, _W, _b, _delta=1.0):
     pred = tf.add(tf.matmul(_X, _W), _b)
@@ -100,6 +101,46 @@ def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate, _cos
     XyWb = [X, y, W, b]
     with tf.Session() as sess:
         if _cross_val == True:
-            return hp.cross_validation(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "lin")
+            return hp.cv(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer_list, cost_list, _epochs, "lin")
         else:
-            return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, huber_cost, _epochs, _rate, "lin")
+            return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, huber_cost, _epochs, "lin")
+
+def linear_regression_cv(_train_X, _train_y, _test_X, _test_y, _epochs, _rate_list, _cost_fn_list, _regularisation_list):
+    X = tf.placeholder(tf.float32, [None, hp.num_features(_train_X)], name="input")
+    y = tf.placeholder(tf.float32, name="output")
+
+    W = tf.Variable(tf.random_normal([hp.num_features(_train_X), 1], dtype=tf.float32), name="weight")
+    b = tf.Variable(tf.random_normal([1], dtype=tf.float32), name="bias")
+
+    if len(_rate_list) != len(_cost_fn_list) and len(_rate_list) != len(_regularisation_list):
+        print("Lists provided are no the same length for cross validation.")
+        sys.exit()
+
+    _, huber_cost = huber_error(X, y, W, b)
+
+    _, lad = calc_error_L1(X, y, W, b)
+
+    num_fold = len(_cost_fn_list)
+
+    cost_list = []
+    optimizer_list = []
+    for i in range(num_fold):
+        reg_type, reg_scale = _regularisation_list[i]
+
+        if reg_type == 1:
+            pred, cost = calc_error_reg_L1(X, y, W, b, _cost_fn_list[i], reg_scale)
+        elif reg_type == 2:
+            pred, cost = calc_error_reg_L2(X, y, W, b, _cost_fn_list[i], reg_scale)
+        else:
+            print("No Regularisation")
+            pred, cost = calc_error(X, y, W, b, _cost_fn_list[i])
+
+        cost_list.append(cost)
+
+        optimizer = tf.train.GradientDescentOptimizer(_rate_list[i]).minimize(cost)
+        optimizer_list.append(optimizer)
+
+    XyWb = [X, y, W, b]
+    with tf.Session() as sess:
+        return hp.cv(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer_list, cost_list, _epochs, "lin")
+        

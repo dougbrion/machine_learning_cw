@@ -107,6 +107,6 @@ def neural_network(_train_X, _train_y, _test_X, _test_y, _epochs, _rate,  _regul
 
     with tf.Session() as sess:
         if _cross_val == True:
-            return hp.cross_validation(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, _rate, "nn")
+            return hp.cross_validation(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, _epochs, "nn")
         else:
-            return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, huber_loss, _epochs, _rate, "nn")
+            return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, huber_loss, _epochs, "nn")

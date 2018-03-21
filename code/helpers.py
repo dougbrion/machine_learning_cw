@@ -3,8 +3,7 @@ import numpy as np
 import tensorflow as tf
 import random
 import matplotlib.pyplot as plt
-# import tensorflow.contrib.eager as tfe
-
+import sys
 PATH = "../data/"
 WHITE = "winequality-white.csv"
 RED = "winequality-red.csv"
@@ -13,16 +12,6 @@ CATEGORIES = "winequality-fixed-categories.csv"
 
 THRESHOLD = 5
 LEARNING_RATE = 0.00001
-
-
-
-
-# tfe.enable_eager_execution()
-
-# def huber_loss(_X, _y, _W, _b, m=1.0):
-#     pred = _X * _W + _b
-#     t = _y - pred
-#     return t ** 2 if tf.abs(t) <= m else m * (2 * tf.abs(t) - m)
 
 def num_examples(_ds):
     return _ds.shape[0]
@@ -59,8 +48,6 @@ def test(_sess, _XyWb, _cost, _test_X, _test_y, _type):
     elif _type == "nn":
         cost = np.sqrt(cost)
 
-            
-    
     # print("Cost=", cost, "W=", _sess.run(W), "b=", _sess.run(b), '\n')
     print("Cost=", cost)
     return cost
@@ -109,7 +96,7 @@ def random_sample(_X, _y, _size):
         y_sample = _y[index_sample]
         return X_sample, y_sample
 
-def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _test_cost, _epochs, _rate, _type):
+def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _test_cost, _epochs, _type):
     X, y, W, b = expand(_XyWb)
 
     merged_summaries = tf.summary.merge_all()
@@ -127,14 +114,10 @@ def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _test_c
         _sess.run(_opt, feed_dict={X: _train_X, y: _train_y})
         training_cost = _sess.run(_cost, feed_dict={X: _train_X, y: _train_y})
         test_cost = _sess.run(_cost, feed_dict={X: _test_X, y: _test_y})
-
-        if _type == "log":
-            training_cost = np.exp(training_cost)
-            test_cost = np.exp(test_cost)
         
-        elif _type == "nn":
-            training_cost = np.sqrt(training_cost)
-            test_cost = np.sqrt(test_cost)
+        # elif _type == "nn":
+        #     training_cost = np.sqrt(training_cost)
+        #     test_cost = np.sqrt(test_cost)
             
         if (epoch % 10) == 0:
             training_x_axis.append(epoch + 1)
@@ -142,42 +125,85 @@ def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _test_c
             test_x_axis.append(epoch + 1)
             test_y_axis.append(test_cost)
 
-        # if (epoch + 1) % 50 == 0:
-            # print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(training_cost), "W=", _sess.run(W), "b=", _sess.run(b))
-        
     print("\nOptimization Finished!")
     XyWb = [X, y, W, b]
     print("Training")
     test(_sess, XyWb, _test_cost, _train_X, _train_y, _type)
     print("Testing")
     test(_sess, XyWb, _test_cost, _test_X, _test_y, _type)
-    # slope = _sess.run(W)
-    # print(slope)
-    # y_intercept = _sess.run(b)
-    # print(y_intercept)
 
-    # # Get best fit line
-    # best_fit = []
-    # for i in _train_X:
-    #     best_fit.append(tf.matmul(slope, [i + y_intercept]))
-    
-    # Plot the result
-    # print("W: ", _sess.run(W))
-    # print("b: ", _sess.run(b))
-    # print(_test_X.shape)
-    # print(W.shape)
-    # best_fit = tf.matmul(_test_X, W)
-    # print(best_fit.shape)
-    # plt.plot(_test_X, _test_y, 'bo', label='Testing data')
-    # plt.plot(_test_X, np.dot(_train_X, _sess.run(W)) + _sess.run(b), label='Fitted line')
-    # # plt.legend()
-    # plt.show()
-    # print(end_cost)
     return training_x_axis, training_y_axis, test_x_axis, test_y_axis    
     # return _train_X, _train_y, _train_X, best_fit
 
 
-def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs, _rate,  _type, _num_fold=10):
+def cv(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt_list, _cost_list, _epochs, _type):
+    X, y, W, b = expand(_XyWb)
+
+    y_size = len(_train_y)
+    x_size = len(_train_X)
+
+    if len(_cost_list) != len(_opt_list):
+        print("Optimiser and Cost lists not that same length")
+        print("Length of Optimiser list: ", len(_opt_list))
+        print("Length of Cost list: ", len(_cost_list))
+        sys.exit()
+    
+    if y_size != x_size:
+        print("Something has gone wrong, arrays not same length")
+        print("length y: ", y_size)
+        print("length x: ", x_size)
+        sys.exit()
+    
+    num_fold = len(_cost_list)
+
+    split_X, split_y = data_split_n(_train_X, _train_y, num_fold)
+
+    training_x_axis, training_y_axis = [], []
+    testing_x_axis, testing_y_axis = [], []
+
+    for i in range(num_fold):       
+        training_cost_sum = 0
+        testing_cost_sum = 0
+        
+        if i == 0:
+            train_X = split_X[1]
+            train_y = split_y[1]
+        else:
+            train_X = split_X[0]
+            train_y = split_y[0]
+
+        for j in range(num_fold):
+            if j != i:
+                if j > 1:
+                    train_X = np.append(train_X, split_X[j], axis=0)
+                    train_y = np.append(train_y, split_y[j], axis=0)
+
+        init = tf.global_variables_initializer()
+
+        _sess.run(init)
+
+        for epoch in range(_epochs):
+            _, training_cost = _sess.run([_opt_list[i], _cost_list[i]], feed_dict={X: train_X, y: train_y})
+            testing_cost = _sess.run(_cost_list[i], feed_dict={X: split_X[i], y: split_y[i]})
+
+            if (epoch % 10) == 0:
+                training_x_axis.append((epoch + 1) + i * _epochs)
+                training_y_axis.append(training_cost)
+                testing_x_axis.append((epoch + 1) + i * _epochs)
+                testing_y_axis.append(testing_cost)
+
+            training_cost_sum += training_cost
+            testing_cost_sum += testing_cost
+
+        training_cost_sum /= (num_fold - 1)
+        testing_cost_sum /= (num_fold - 1)
+
+    print("\nOptimization Finished!\n")
+
+    return training_x_axis, training_y_axis, testing_x_axis, testing_y_axis
+
+
+def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs, _type, _num_fold=10):
     X, y, W, b = expand(_XyWb)
 
     merged_summaries = tf.summary.merge_all()
@@ -187,7 +213,6 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
     training_x_axis, training_y_axis = [], []
     testing_x_axis, testing_y_axis = [], []
     
-    init = tf.global_variables_initializer()
 
     y_size = len(_train_y)
     x_size = len(_train_X)
@@ -200,8 +225,7 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
     else:
         overall_cost = 0
         split_X, split_y = data_split_n(_train_X, _train_y, _num_fold)
-
-        _sess.run(init)
+        
             
         for i in range(_num_fold):       
             training_cost_sum = 0
@@ -220,14 +244,14 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
                         train_X = np.append(train_X, split_X[j], axis=0)
                         train_y = np.append(train_y, split_y[j], axis=0)
 
+            init = tf.global_variables_initializer()
+
+            _sess.run(init)
+
             for epoch in range(_epochs):
 
                 _, training_cost = _sess.run([_opt, _cost], feed_dict={X: train_X, y: train_y})
                 testing_cost = _sess.run(_cost, feed_dict={X: split_X[i], y: split_y[i]})
-
-                if _type == "log":
-                    training_cost = np.exp(training_cost)
-                    testing_cost = np.exp(testing_cost)
 
                 if (epoch % 10) == 0:
                     training_x_axis.append((epoch + 1) + i * _epochs)
@@ -248,17 +272,6 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
 
         print("\nOptimization Finished!\n")
 
-            # XyWb = [X, y, W, b]
-        # cost = test(_sess, XyWb, _cost, split_X[i], split_y[i], _type)
-            # overall_cost += cost
-            # print(overall_cost)
-            # training_x_axis.append(i)
-            # training_y_axis.append(cost)
-            
-        # overall_cost /= _num_fold
-        # print(overall_cost)
-        # training_x_axis.append(_num_fold)
-        # training_y_axis.append(overall_cost)
         return training_x_axis, training_y_axis, testing_x_axis, testing_y_axis
 
 def plotter(title, x, y, tx, ty, percent=100, filename = "", save = False):
@@ -268,7 +281,7 @@ def plotter(title, x, y, tx, ty, percent=100, filename = "", save = False):
     plt.plot(tx, ty, label=test_label, color='black')
     plt.title(title)
     plt.xlabel("Number of Epochs")
-    plt.ylabel("Training Error")
+    plt.ylabel("Error")
     plt.grid(linestyle='-')
     plt.legend()
     if save == True:
@@ -347,3 +360,9 @@ def intro():
 
     train_X, train_y, test_X, test_y = random_train_test(X, y, training_size)
     return train_X, train_y, test_X, test_y, train_percent, cross_val_bool
+
+def cv_intro():
+    X, y = getXy()
+    training_size = int((100 / 100) * len(y))
+    train_X, train_y, test_X, test_y = random_train_test(X, y, training_size)
+    return train_X, train_y, test_X, test_y

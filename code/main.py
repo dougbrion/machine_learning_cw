@@ -1,5 +1,6 @@
 import helpers as hp
 import neural_network as nn
+import linear_regression as linr
 import sys
 import numpy as np
 import random
@@ -14,29 +15,31 @@ def seeder():
     np.random.seed(seed)
     tf.set_random_seed(seed)
 
-def main():
-    seeder()
-        
-    if len(sys.argv) == 2:
+rate_list = [0.1, 0.1, 0.1, 0.1, 0.1]
+reg_list = [[0,0],[0,0],[0,0],[0,0],[0,0]]
+cost_list = [1,1,1,1,1]
 
+
+def main():
+    seeder()       
+    if len(sys.argv) == 2:
         if sys.argv[1] == "linr":
             train_X, train_y, test_X, test_y, train_percent, cross_val = hp.intro()
             rl.run_linr(train_X, train_y, test_X, test_y, train_percent, cross_val)
-
         elif sys.argv[1] == "nn":
             train_X, train_y, test_X, test_y, train_percent, cross_val = hp.intro()
             nn.run_nn(train_X, train_y, test_X, test_y, train_percent, cross_val)
-
         elif sys.argv[1] == "linr_break":
             train_X, train_y, test_X, test_y, train_percent, cross_val = hp.intro()
             rl.linr_break(train_X, train_y, test_X, test_y, train_percent, cross_val)
-
         elif sys.argv[1] == "histogram":
             hp.histogram()
-
         elif sys.argv[1] == "linr_plotter":
             plters.linr_plotter()
-        
+        elif sys.argv[1] == "linr_cv":
+            train_X, train_y, test_X, test_y = hp.cv_intro()
+            x, y, tx, ty = linr.linear_regression_cv(train_X, train_y, test_X, test_y, 100, rate_list, cost_list, reg_list)
+            hp.plotter("", x, y, tx, ty, 80)
         elif sys.argv[1] == "L1lambda":
             i = input("How many epochs? ")
             j = input("What learning rate? ")
@@ -55,8 +58,6 @@ def main():
                 plt.grid(linestyle='-')
                 init_reg += 0.001
             plt.show()
-
-
         elif sys.argv[1] == "L2lambda":
             i = input("How many epochs? ")
             j = input("What learning rate? ")
