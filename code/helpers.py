@@ -290,4 +290,29 @@ def questions():
     scale = input("What scale for regularisation? ")
     return i, j, reg_level, scale
 
-    
+def histogram():
+    ds = load_ds(PATH, FIXED)
+    data = ds['quality'].values
+    y = data.astype(np.int64)
+    print(y)
+    # list_y = np.concatenate(y)
+    # print(list_y)
+    count = np.bincount(y)
+    print(count)
+    count = count[3:]
+    print(count)
+    val_range = np.arange(10)
+    val_range = val_range[3:]
+    percent = np.multiply(np.divide(count, len(y)), 100)
+    print(val_range)
+    print(percent)
+    plt.bar(val_range, count, width=0.75, linewidth=0.5, edgecolor="black", color="grey")
+    plt.xlabel("Wine Quality Value")
+    plt.ylabel("Number of Wine Samples")
+    i = 0
+    for a, b in zip(val_range, count):
+        plt.text(a - 0.5, b + 20, str(b) + " Samples")
+        plt.text(a - 0.3, b + 90, "{:.2f}".format(percent[i]) + "%")
+        i = i + 1
+    # plt.annotate()
+    plt.show()

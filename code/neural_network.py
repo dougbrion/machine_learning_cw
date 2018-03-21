@@ -2,9 +2,6 @@ import tensorflow as tf
 import helpers as hp
 import numpy as np
 
-
-
-
 def softmax_fn(_X, _inputs, _units):
     W = tf.Variable(tf.random_normal([_inputs, _units]), name='weight')
     b = tf.Variable(tf.random_normal([_units]), name='bias')
@@ -52,13 +49,30 @@ def cost_function(_y, _pred):
     cost = tf.reduce_mean(tf.square(_y - _pred))
     return cost
 
-def layers(_X, _y):
+def layers(_X, _y, _output_layer=0):
     inputs = int(hp.num_features(_X))
     hidden_layer_nodes = int((inputs + 1) / 2)
 
     hidden_layer, hidden_weight, hidden_bias = relu_fn(_X, inputs, hidden_layer_nodes)
 
-    pred, weight, bias = relu_fn(hidden_layer, hidden_layer_nodes, 1)
+    if _output_layer == 0:
+        print("Ouput Layer is ReLU")
+        pred, weight, bias = relu_fn(hidden_layer, hidden_layer_nodes, 1)
+    elif _output_layer == 1: 
+        print("Ouput Layer is SeLU")
+        pred, weight, bias = selu_fn(hidden_layer, hidden_layer_nodes, 1)
+    elif _output_layer == 2:
+        print("Ouput Layer is Softmax")
+        pred, weight, bias = softmax_fn(hidden_layer, hidden_layer_nodes, 1)
+    elif _output_layer == 3:
+        print("Ouput Layer is TanH")
+        pred, weight, bias = tannh_fn(hidden_layer, hidden_layer_nodes, 1)
+    elif _output_layer == 4:
+        print("Ouput Layer is Sigmoid")
+        pred, weight, bias = sigmoid_fn(hidden_layer, hidden_layer_nodes, 1)
+    else:
+        print("Ouput Layer is ReLU")
+        pred, weight, bias = relu_fn(hidden_layer, hidden_layer_nodes, 1)
 
     cost = cost_function(_y, pred)
     W = [hidden_weight, weight]
@@ -66,13 +80,13 @@ def layers(_X, _y):
 
     return pred, cost, W, b
 
-def neural_network(_train_X, _train_y, _test_X, _test_y, _epochs, _rate,  _regularisation, _cross_val):
+def neural_network(_train_X, _train_y, _test_X, _test_y, _epochs, _rate,  _regularisation, _cross_val, _output_layer=0):
     reg_type, reg_scale = _regularisation
     X = tf.placeholder(tf.float32, [None, hp.num_features(_train_X)], name="input")
     y = tf.placeholder(tf.float32, name="output")
-    pred, cost, W, b = layers(X, y)
+    pred, cost, W, b = layers(X, y, _output_layer)
 
-    mad = calc_error_L1(y, pred)
+    lad = calc_error_L1(y, pred)
     huber_loss = huber_error(y, pred)
 
     print("Regularisation: ", _regularisation)
