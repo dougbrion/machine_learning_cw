@@ -18,6 +18,9 @@ def main():
     tf.set_random_seed(seed)
     learning_rate_list = [0.1, 0.001, 0.0001, 0.00001]
     epochs_list = [100, 500, 1000, 5000, 10000, 50000]
+    cost_fn_list = [1, 2, 3, 4, 5]
+    regularisation_list = [0, 1, 2]
+    reg_param_list = [0.0001, 0.0002, 0.0004, 0.0008, 0.0016, 0.0032, 0.0064, 0.0128, 0.0256, 0.0512, 0.1024]
 
     regularisation = 1, 0.01    
     hp.intro()
@@ -77,13 +80,15 @@ def main():
             i = int(input("How many epochs? "))
             j = float(input("What learning rate? "))
             cost_fn = int(input("Would you like a 1 (L1), 2 (L2), 3 (Elastic Net), 4 (SVM), 5 (Huber Loss) cost function? "))
-            reg_level = int(input("What regularisation: 0 (None), 1 or 2? "))
             scale = 0
             reg_str = ""
             params = [1.,1.]
-            if reg_level != 0:
-                scale = float(input("What scale for regularisation? "))
-                reg_str = ", Regularisation=L" + str(reg_level) + ", Scale="  + str(scale)
+            reg_level = 0
+            if cost_fn != 3:
+                reg_level = int(input("What regularisation: 0 (None), 1 or 2? "))
+                if reg_level != 0:
+                    scale = float(input("What scale for regularisation? "))
+                    reg_str = ", Regularisation=L" + str(reg_level) + ", Scale="  + str(scale)
             regularisation = reg_level, scale
             loss_str = "L1"
             if cost_fn == 1:
