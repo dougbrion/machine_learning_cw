@@ -12,7 +12,7 @@ import run_linr as rl
 import run_nn as nn
 
 def main():
-    
+
     seed = 13
     np.random.seed(seed)
     tf.set_random_seed(seed)
@@ -63,10 +63,14 @@ def main():
         elif sys.argv[1] == "histogram":
             hp.histogram()
 
-        elif sys.argv[1] == "hp.plotter":
+        elif sys.argv[1] == "plotter":
             print("Running Plotter")
             for i in epochs_list:
                 for j in learning_rate_list:
+                    for k in cost_fn_list:
+                        for l in regularisation_list:
+                            for m in reg_param_list:
+                                
                     print("Starting Linear Regression " + str(i) + " " + str(j))
                     x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, i, j)
                     filename = "../figs/TEST_LINR_" + str(i) + "_" + str(j) + ".png"
