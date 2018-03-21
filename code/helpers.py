@@ -24,12 +24,6 @@ LEARNING_RATE = 0.00001
 #     t = _y - pred
 #     return t ** 2 if tf.abs(t) <= m else m * (2 * tf.abs(t) - m)
 
-def intro():
-    print("###############################")
-    print("# Machine Learning Coursework #")
-    print("######## Douglas Brion ########")
-    print("###############################\n")
-
 def num_examples(_ds):
     return _ds.shape[0]
 
@@ -316,3 +310,40 @@ def histogram():
         i = i + 1
     # plt.annotate()
     plt.show()
+
+def cross_val():
+    if input("Would you like to use cross validation? (y/n)? ") == "y":
+        return True
+    else: 
+        return False
+
+def percentages():
+    train_percent = int(input("Enter percentage of data for training: "))
+    while train_percent < 0 or train_percent > 100:
+        train_percent = int(input("Error. Value not a valid percentage. Enter a new percentage: "))
+
+    print(train_percent, "% of the data will be used for training")
+    test_percent = 100 - train_percent
+    print(test_percent, "% of the data will be used for testing")
+    return train_percent, test_percent
+
+def getXy():
+    ds = load_ds(PATH, FIXED)
+    X, y = split(ds)
+    return X, y
+
+def intro():
+    print("###############################")
+    print("# Machine Learning Coursework #")
+    print("######## Douglas Brion ########")
+    print("###############################\n")
+
+    train_percent, test_percent = percentages()
+    cross_val_bool = cross_val()
+    X, y = getXy()
+
+    training_size = int((train_percent / 100) * len(y))
+    testing_size = len(y) - training_size
+
+    train_X, train_y, test_X, test_y = random_train_test(X, y, training_size)
+    return train_X, train_y, test_X, test_y, train_percent, cross_val_bool
