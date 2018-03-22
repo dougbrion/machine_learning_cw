@@ -101,11 +101,11 @@ def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate, _cos
     XyWb = [X, y, W, b]
     with tf.Session() as sess:
         if _cross_val == True:
-            return hp.cv(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer_list, cost_list, _epochs, "lin")
+            return hp.cross_validation(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, huber_cost, _epochs, "lin")
         else:
             return hp.run(sess, XyWb, _train_X, _train_y, _test_X, _test_y, optimizer, cost, huber_cost, _epochs, "lin")
 
-def linear_regression_cv(_train_X, _train_y, _test_X, _test_y, _epochs, _rate_list, _cost_fn_list, _regularisation_list):
+def linear_regression_params(_train_X, _train_y, _test_X, _test_y, _epochs, _rate_list, _cost_fn_list, _regularisation_list):
     X = tf.placeholder(tf.float32, [None, hp.num_features(_train_X)], name="input")
     y = tf.placeholder(tf.float32, name="output")
 

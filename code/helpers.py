@@ -114,10 +114,6 @@ def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _test_c
         _sess.run(_opt, feed_dict={X: _train_X, y: _train_y})
         training_cost = _sess.run(_cost, feed_dict={X: _train_X, y: _train_y})
         test_cost = _sess.run(_cost, feed_dict={X: _test_X, y: _test_y})
-        
-        # elif _type == "nn":
-        #     training_cost = np.sqrt(training_cost)
-        #     test_cost = np.sqrt(test_cost)
             
         if (epoch % 10) == 0:
             training_x_axis.append(epoch + 1)
@@ -128,9 +124,11 @@ def run(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _test_c
     print("\nOptimization Finished!")
     XyWb = [X, y, W, b]
     print("Training")
-    test(_sess, XyWb, _test_cost, _train_X, _train_y, _type)
+    train_test = test(_sess, XyWb, _test_cost, _train_X, _train_y, _type)
     print("Testing")
-    test(_sess, XyWb, _test_cost, _test_X, _test_y, _type)
+    test_test = test(_sess, XyWb, _test_cost, _test_X, _test_y, _type)
+    training_y_axis.append(train_test)
+    test_y_axis.append(test_test)
 
     return training_x_axis, training_y_axis, test_x_axis, test_y_axis    
     # return _train_X, _train_y, _train_X, best_fit
@@ -203,19 +201,26 @@ def cv(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt_list, _cost_list
     return training_x_axis, training_y_axis, testing_x_axis, testing_y_axis
 
 
-def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _epochs, _type, _num_fold=10):
+def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _cost, _test_cost, _epochs, _type, _num_fold=10):
     X, y, W, b = expand(_XyWb)
 
     merged_summaries = tf.summary.merge_all()
     log_directory = 'tmp/logs'
     summary_writer = tf.summary.FileWriter(log_directory, _sess.graph)
 
-    training_x_axis, training_y_axis = [], []
-    testing_x_axis, testing_y_axis = [], []
-    
+    training_x_axis, training_y_axis = [[]], [[]]
+    testing_x_axis, testing_y_axis = [[]], [[]]
+    straining_x_axis, straining_y_axis = [], []
+    stesting_x_axis, stesting_y_axis = [], []
 
     y_size = len(_train_y)
     x_size = len(_train_X)
+
+    for a in range(_num_fold - 1):
+        training_x_axis.append([])
+        training_y_axis.append([])
+        testing_x_axis.append([])
+        testing_y_axis.append([])
 
     if y_size != x_size:
         print("Something has gone wrong, arrays not same length")
@@ -223,14 +228,12 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
         print("length x: ", x_size)
 
     else:
-        overall_cost = 0
+        overall_test_cost = 0
+        overall_train_cost = 0
         split_X, split_y = data_split_n(_train_X, _train_y, _num_fold)
         
-            
         for i in range(_num_fold):       
-            training_cost_sum = 0
-            testing_cost_sum = 0
-            
+
             if i == 0:
                 train_X = split_X[1]
                 train_y = split_y[1]
@@ -252,33 +255,54 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
 
                 _, training_cost = _sess.run([_opt, _cost], feed_dict={X: train_X, y: train_y})
                 testing_cost = _sess.run(_cost, feed_dict={X: split_X[i], y: split_y[i]})
-
+                
                 if (epoch % 10) == 0:
-                    training_x_axis.append((epoch + 1) + i * _epochs)
-                    training_y_axis.append(training_cost)
-                    testing_x_axis.append((epoch + 1) + i * _epochs)
-                    testing_y_axis.append(testing_cost)
-
-                training_cost_sum += training_cost
-                testing_cost_sum += testing_cost
-
-            training_cost_sum /= (_num_fold - 1)
-            testing_cost_sum /= (_num_fold - 1)
-
+                    training_x_axis[i].append(epoch + 1)
+                    training_y_axis[i].append(training_cost)
+                    testing_x_axis[i].append(epoch + 1)
+                    testing_y_axis[i].append(testing_cost)
             
+            XyWb = [X, y, W, b]
+            train_test = test(_sess, XyWb, _test_cost, train_X, train_y, _type)
+            test_test = test(_sess, XyWb, _test_cost, split_X[i], split_y[i], _type)
 
-                # if (epoch + 1) % 50 == 0:
-                    # print("Epoch:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(training_cost), "W=", _sess.run(W), "b=", _sess.run(b))
+            overall_test_cost += test_test
+            overall_train_cost += train_test
 
+        overall_test_cost /= _num_fold       # if (epoch + 1) % 50 == 0:
+        overall_train_cost /= _num_fold       # if (epoch + 1) % 50 == 0:
+
+        tmpa  = 0
+        tmpb = 0
+
+        print(len(training_x_axis[0]))
+
+        for i in range(len(training_x_axis[0])):
+            for j in range(_num_fold):
+                tmpa += (training_y_axis[j][i] / _num_fold)
+                tmpb += (testing_y_axis[j][i] / _num_fold)
+            straining_y_axis.append(tmpa)
+            stesting_y_axis.append(tmpb)
+            tmpa = 0
+            tmpb = 0
+
+        straining_y_axis.append(overall_train_cost)
+        stesting_y_axis.append(overall_test_cost)
+        print(len(straining_y_axis))
         print("\nOptimization Finished!\n")
+        # return training_x_axis, training_y_axis, testing_x_axis, testing_y_axis
 
-        return training_x_axis, training_y_axis, testing_x_axis, testing_y_axis
+        return training_x_axis[0], straining_y_axis, testing_x_axis[0], stesting_y_axis
 
 def plotter(title, x, y, tx, ty, percent=100, filename = "", save = False):
-    train_label = "training " + str(percent) + "%"
-    test_label = "testing " +str(100 - percent) + "%"
-    plt.plot(x, y, label=train_label, color='grey')
-    plt.plot(tx, ty, label=test_label, color='black')
+    train_label = "training: " + str(percent) + "%\nfinal error: " + "{:.3f}".format(y[-2])
+    test_label = "testing: " + str(100 - percent) + "%\nfinal error: " + "{:.3f}".format(ty[-2])
+    compare_train = "huber train error: " + "{:.3f}".format(y[-1])
+    compare_test = "huber test error: " + "{:.3f}".format(ty[-1])
+    plt.plot(x, y[:-1], label=train_label, color='grey')
+    plt.plot(tx, ty[:-1], label=test_label, color='black')
+    plt.plot(x[-1], y[-1], label=compare_train, color='grey', marker='.')
+    plt.plot(tx[-1], ty[-1], label=compare_test, color='black', marker='.')
     plt.title(title)
     plt.xlabel("Number of Epochs")
     plt.ylabel("Error")

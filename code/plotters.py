@@ -8,11 +8,11 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 
 def linr_plotter():
-    learning_rate_list = [0.1, 0.001, 0.0001, 0.00001]
-    epochs_list = [100, 500, 1000, 5000, 10000, 50000]
+    learning_rate_list = [0.5, 0.1, 0.001, 0.0001]
+    epochs_list = [100, 500, 1000, 5000, 10000]
     cost_fn_list = [1, 2, 3, 4, 5]
     regularisation_list = [0, 1, 2]
-    reg_param_list = [0.0001, 0.0002, 0.0004, 0.0008, 0.0016, 0.0032, 0.0064, 0.0128, 0.0256, 0.0512, 0.1024]
+    reg_param_list = [0.0001, 0.0002, 0.0004, 0.0008, 0.0016, 0.0032, 0.0064, 0.0128, 0.0256, 0.0512, 0.1024, 0.2048]
     
     for train_percent in range(10, 100, 10):
         for i in epochs_list:
@@ -53,10 +53,10 @@ def linr_plotter():
                             print("Finished Linear Regression.\n")
 
 def nn_plotter():
-    learning_rate_list = [0.1, 0.001, 0.0001, 0.00001]
-    epochs_list = [100, 500, 1000, 5000, 10000, 50000]
+    learning_rate_list = [0.5, 0.1, 0.001, 0.0001]
+    epochs_list = [100, 500, 1000, 5000, 10000]
     regularisation_list = [0, 1, 2]
-    reg_param_list = [0.0001, 0.0002, 0.0004, 0.0008, 0.0016, 0.0032, 0.0064, 0.0128, 0.0256, 0.0512, 0.1024]
+    reg_param_list = [0.0001, 0.0002, 0.0005, 0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.2, 0.5, 1.0]
     
     for train_percent in range(10, 100, 10):
         for i in epochs_list:
@@ -74,10 +74,10 @@ def nn_plotter():
                         
                         reg_str = ""
                         if l != 0:
-                            reg_str = ", Regularisation=L" + str(l) + ", Scale=" + str(m)
+                            reg_str = "Regularisation=L" + str(l) + ", Scale=" + str(m)
                         print("\nStarting Neural Network, Epochs=" + str(i) + ", Learning Rate=" + str(j) + reg_str + ", Training Percent=" + str(train_percent))
                         x, y, tx, ty = nn.neural_network(train_X, train_y, test_X, test_y, i, j, [l, m], False, 0)
-                        filename = "../figs/NN_E" + str(i) + "_LR" + str(j) + "_R" + reg_str + "_TP" + str(train_percent) + ".png"
-                        title = "Neural Network, Epochs=" + str(i) + ", Learning Rate=" + str(j) +"\n" + reg_str
+                        filename = "../figs/NN_E" + str(i) + "_LR" + str(j) + "_R" + str(l) + "_S" + str(m) + "_TP" + str(train_percent) + ".png"
+                        title = "Neural Network, Epochs=" + str(i) + ", Learning Rate=" + str(j) +"\n Hidden ReLU, Output ReLU\n" + reg_str
                         hp.plotter(title, x, y, tx, ty, train_percent, filename, True)
                         print("Finished Neural Network.\n")

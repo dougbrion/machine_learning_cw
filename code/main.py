@@ -23,25 +23,33 @@ cost_list = [1,2,1,2,1]
 def main():
     seeder()       
     if len(sys.argv) == 2:
+
         if sys.argv[1] == "linr":
             train_X, train_y, test_X, test_y, train_percent, cross_val = hp.intro()
             rl.run_linr(train_X, train_y, test_X, test_y, train_percent, cross_val)
+
         elif sys.argv[1] == "nn":
             train_X, train_y, test_X, test_y, train_percent, cross_val = hp.intro()
             nn.run_nn(train_X, train_y, test_X, test_y, train_percent, cross_val)
+
         elif sys.argv[1] == "linr_break":
             train_X, train_y, test_X, test_y, train_percent, cross_val = hp.intro()
             rl.linr_break(train_X, train_y, test_X, test_y, train_percent, cross_val)
+
         elif sys.argv[1] == "histogram":
             hp.histogram()
+
         elif sys.argv[1] == "linr_plotter":
             plters.linr_plotter()
+
         elif sys.argv[1] == "nn_plotter":
             plters.nn_plotter()
+
         elif sys.argv[1] == "linr_cv":
             train_X, train_y, test_X, test_y = hp.cv_intro()
-            x, y, tx, ty = linr.linear_regression_cv(train_X, train_y, test_X, test_y, 100, rate_list, cost_list, reg_list)
+            x, y, tx, ty = linr.linear_regression_params(train_X, train_y, test_X, test_y, 100, rate_list, cost_list, reg_list)
             hp.plotter("", x, y, tx, ty, 80)
+            
         elif sys.argv[1] == "L1lambda":
             i = input("How many epochs? ")
             j = input("What learning rate? ")

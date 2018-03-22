@@ -138,7 +138,7 @@ A linear regression program was written in Python using Tensorflow~\cite{tensorf
 For linear regression 2 basic loss functions were implemented first.
 
 \subsection{L1 loss function}
-The L1 loss function, least absolute deviations, tries to minimise the absolute difference between the predicted and real values. The sum of all the differences for all the samples can be described as follows:
+The $L_1$ loss function, least absolute deviations, tries to minimise the absolute difference between the predicted and real values. The sum of all the differences for all the samples can be described as follows:
 
 \begin{equation}
 L_1 = \sum_{i = 1}^{n} \abs{y_i - f(x_i)}
@@ -150,26 +150,26 @@ This is a fairly robust loss function which is not that affected by outliers.
 	\begin{center}
 		\includegraphics[width=0.9\linewidth]{img/l1loss.png}
 	\end{center}
-	\caption{Loss Function = $\sum_{i = 1}^{n} \abs{y_i - f(x_i)}$ (L1 loss), Epochs = 1000, Learning Rate = 0.02, Training Error = 0.321, Testing Error = 0.373}
+	\caption{Loss Function = $\sum_{i = 1}^{n} \abs{y_i - f(x_i)}$, Training Error = 0.321, Testing Error = 0.373}
 	\label{fig:l1loss}
 \end{figure}
 
 \subsection{L2 loss function}
-The L2 loss function, least square error, minimises the square difference between the predicted and real values. This value is much large than that of L1 loss and therefore is more affected by outliers, however, will optimise the predictor faster.
+The $L_2$ loss function, least square error, minimises the square difference between the predicted and real values. This value is much large than that of $L_1$ loss and therefore is more affected by outliers, however, will optimise the predictor faster.
 
 \begin{equation}
-L_1 = \sum_{i = 1}^{n} (y_i - f(x_i))^2
+L_2 = \sum_{i = 1}^{n} (y_i - f(x_i))^2
 \end{equation}
 
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=0.9\linewidth]{img/l2loss.png}
 	\end{center}
-	\caption{Loss Function = $\sum_{i = 1}^{n} (y_i - f(x_i))^2$ (L2 loss), Epochs = 1000, Learning Rate = 0.02, Training Error = 0.271, Testing Error = 0.276}
+	\caption{Loss Function = $\sum_{i = 1}^{n} (y_i - f(x_i))^2$, Training Error = 0.271, Testing Error = 0.276}
 	\label{fig:l2loss}
 \end{figure}
 
-Notice how the predictor using the L2 loss function in \ref{fig:l2loss}. minimises the error much faster than the L1 loss in \ref{fig:l1loss} and as outliers have been removed in data preparation the L2 loss is quite robust.
+Notice how the predictor using the $L_2$ loss function in \ref{fig:l2loss}. minimises the error much faster than the $L_1$ loss in \ref{fig:l1loss} and as outliers have been removed in data preparation the $L_2$ loss is quite robust.
 
 As the epochs are increased the optimiser is able to reduce the loss until no improvements can be made. The learning rate also greatly affects the rate at which the loss is minimised. However, if the learning rate is too high the predictor will not improve on the training data, as can be seen in \ref{fig:break}.
 
@@ -177,12 +177,12 @@ As the epochs are increased the optimiser is able to reduce the loss until no im
 	\begin{center}
 		\includegraphics[width=0.9\linewidth]{img/linrbreak.png}
 	\end{center}
-	\caption{Training Error = $\sum_{i = 1}^{n} (y_i - f(x_i))^2$ (L2 loss), Epochs = 100, Learning Rate = variable}
+	\caption{Training Error = $\sum_{i = 1}^{n} (y_i - f(x_i))^2$ ($L_2$ loss), Epochs = 100, Learning Rate = variable}
 	\label{fig:break}
 \end{figure}
 
 \subsection{Improvements}
-These relatively simple models can be improved upon by adding regularisation. Regularisation is a technique used to prevent over fitting the data. Both L1 and L2 regularisation have been implemented, being the sum of the weights and sum of the square weights respectively. The regularisation term is added to the loss function, the terms for L1 and L2 look as follows:
+These relatively simple models can be improved upon by adding regularisation. Regularisation is a technique used to prevent over fitting the data. Both $L_1$ and $L_2$ regularisation have been implemented, being the sum of the weights and sum of the square weights respectively. The regularisation term is added to the loss function, the terms for $L_1$ and $L_2$ look as follows:
 
 \noindent\begin{minipage}{.5\linewidth}
 	\begin{equation}
@@ -206,6 +206,8 @@ Each layer could be assigned when the network is constructed to have a specific 
 
 Neural networks have an advantage over standard linear regression that they can model non-linearities automatically however they are more likely to overfit the data so observing the out of sample error is especially important.
 
+The neural net used a gradient descent optimiser to minimise the loss function, and either $L_1$, $L_2$ or no regularisation can be selected for training. 
+
 \subsection{Support Vector Regression}
 The goal for a support vector regression (SVR)~\cite{Cortes1995} predictor is to find a predication $f(x)$ like our other predictors however it should have at most $\epsilon$ deviation from the real value $y_i$ for all the in sample data.
 
@@ -218,7 +220,7 @@ L_{SVR} = max(0, \sum_{i = 1}^{n} \abs{y_i - f(x_i)} - \epsilon)
 This loss function is known as the hinge loss.
 
 \subsection{Elastic Net Regularisation}
-
+The elastic net regression is a regularised method combining the $L_1$ and $L_2$ penalties of the lasso and ridge methods. A hyper-parameter, $\alpha$ between 1 and 0 controls how much of $L_1$ and $L_2$ penalisation is used.
 
 
 {\small
