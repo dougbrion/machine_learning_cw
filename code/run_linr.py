@@ -14,6 +14,7 @@ def run_linr(train_X, train_y, test_X, test_y, train_percent, cross_val):
     reg_str = ""
     params = [1.,1.]
     reg_level = 0
+    cross = ""
     if cost_fn != 3:
         reg_level = int(input("What regularisation: 0 (None), 1 or 2? "))
         if reg_level != 0:
@@ -34,7 +35,10 @@ def run_linr(train_X, train_y, test_X, test_y, train_percent, cross_val):
         loss_str = "SVR"
     elif cost_fn == 5:
         loss_str = "Huber"
-    title = "Linear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j) +"\n Loss Function=" + loss_str + reg_str
+    if cross_val == True:
+        cross = "\n10-fold Cross Validation"
+        train_percent = 90
+    title = "Linear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j) +"\n Loss Function=" + loss_str + reg_str + cross
     print("Running Linear Regression")
     x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, i, j, cost_fn, regularisation, cross_val, params)
     hp.plotter(title, x, y, tx, ty, train_percent)

@@ -4,10 +4,13 @@ import tensorflow as tf
 import random
 import matplotlib.pyplot as plt
 import sys
+from scipy import stats
+
 PATH = "../data/"
 WHITE = "winequality-white.csv"
 RED = "winequality-red.csv"
-FIXED = "winequality-fixed.csv"
+FIXED = "winequality-red-fixed.csv"
+WHITEFIXED = "winequality-white-fixed.csv"
 CATEGORIES = "winequality-fixed-categories.csv"
 
 THRESHOLD = 5
@@ -47,7 +50,8 @@ def test(_sess, _XyWb, _cost, _test_X, _test_y, _type):
     
     elif _type == "nn":
         cost = np.sqrt(cost)
-
+    pred = tf.add(tf.matmul(W, X), b)
+    print("Value: ", _sess.run([pred], feed_dict={X: _test_X, y: _test_y}))
     # print("Cost=", cost, "W=", _sess.run(W), "b=", _sess.run(b), '\n')
     print("Cost=", cost)
     return cost
@@ -290,7 +294,6 @@ def cross_validation(_sess, _XyWb, _train_X, _train_y, _test_X, _test_y, _opt, _
         stesting_y_axis.append(overall_test_cost)
         print(len(straining_y_axis))
         print("\nOptimization Finished!\n")
-        # return training_x_axis, training_y_axis, testing_x_axis, testing_y_axis
 
         return training_x_axis[0], straining_y_axis, testing_x_axis[0], stesting_y_axis
 
@@ -308,6 +311,7 @@ def plotter(title, x, y, tx, ty, percent=100, filename = "", save = False):
     plt.ylabel("Error")
     plt.grid(linestyle='-')
     plt.legend()
+    plt.tight_layout()
     if save == True:
         plt.savefig(filename)
         plt.close()
@@ -332,18 +336,19 @@ def histogram():
     print(count)
     count = count[3:]
     print(count)
-    val_range = np.arange(10)
+    val_range = np.arange(9)
     val_range = val_range[3:]
     percent = np.multiply(np.divide(count, len(y)), 100)
     print(val_range)
     print(percent)
+    plt.title("Red Wine")
     plt.bar(val_range, count, width=0.75, linewidth=0.5, edgecolor="black", color="grey")
     plt.xlabel("Wine Quality Value")
     plt.ylabel("Number of Wine Samples")
     i = 0
     for a, b in zip(val_range, count):
-        plt.text(a - 0.5, b + 20, str(b) + " Samples")
-        plt.text(a - 0.3, b + 90, "{:.2f}".format(percent[i]) + "%")
+        plt.text(a - 0.3, b + 5, str(b) + " Samples")
+        plt.text(a - 0.2, b + 20, "{:.2f}".format(percent[i]) + "%")
         i = i + 1
     # plt.annotate()
     plt.show()
@@ -390,3 +395,16 @@ def cv_intro():
     training_size = int((100 / 100) * len(y))
     train_X, train_y, test_X, test_y = random_train_test(X, y, training_size)
     return train_X, train_y, test_X, test_y
+
+# check similarity between data
+# def similarity():
+#     raw_data = cv.load_data()
+
+#     statistics = []
+#     #np.split(raw_data[0], 1, )
+#     for i in range(p.NUM_FEATURES + 1):
+#         statistics.append(stats.ks_2samp(raw_data[0][:, i], raw_data[1][:, i])[1])
+
+#     np.savetxt("../logs/data_dist.txt", statistics, fmt="%e")
+
+# return statistics

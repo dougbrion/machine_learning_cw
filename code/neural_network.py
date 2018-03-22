@@ -66,7 +66,7 @@ def layers(_X, _y, _output_layer=0):
         pred, weight, bias = softmax_fn(hidden_layer, hidden_layer_nodes, 1)
     elif _output_layer == 3:
         print("Ouput Layer is TanH")
-        pred, weight, bias = tannh_fn(hidden_layer, hidden_layer_nodes, 1)
+        pred, weight, bias = tanh_fn(hidden_layer, hidden_layer_nodes, 1)
     elif _output_layer == 4:
         print("Ouput Layer is Sigmoid")
         pred, weight, bias = sigmoid_fn(hidden_layer, hidden_layer_nodes, 1)

@@ -14,30 +14,40 @@
 \fi}
 \global\let\hyper@last\relax 
 \gdef\HyperFirstAtBeginDocument#1{#1}
-\providecommand\HyField@AuxAddToFields[1]{}
-\providecommand\HyField@AuxAddToCoFields[2]{}
+\providecommand*\HyPL@Entry[1]{}
 \citation{WineQuality}
 \citation{mckinneypandas}
 \citation{tensorflow2015-whitepaper}
+\HyPL@Entry{0<</S/D>>}
 \@writefile{toc}{\contentsline {section}{\numberline {1}\hskip -1em.\nobreakspace  {}Introduction}{1}{section.1}}
 \@writefile{toc}{\contentsline {section}{\numberline {2}\hskip -1em.\nobreakspace  {}Data Preparation}{1}{section.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}\hskip -1em.\nobreakspace  {}Learning approach}{1}{subsection.2.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The histogram for both white wine and red wine qualities.}}{1}{figure.1}}
-\newlabel{fig:hist}{{1}{1}{The histogram for both white wine and red wine qualities}{figure.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces The attribute statistics before normalisation and removal of outliers.}}{1}{table.1}}
-\newlabel{tab:attributes}{{1}{1}{The attribute statistics before normalisation and removal of outliers}{table.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The histogram for white wine qualities.}}{1}{figure.1}}
+\newlabel{fig:hist}{{1}{1}{The histogram for white wine qualities}{figure.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The histogram for red wine qualities.}}{1}{figure.2}}
+\newlabel{fig:histr}{{2}{1}{The histogram for red wine qualities}{figure.2}{}}
 \citation{CrossValidation}
 \citation{tensorflow2015-whitepaper}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces The attribute statistics after normalisation and removal of outliers.}}{2}{table.2}}
-\newlabel{tab:normalised}{{2}{2}{The attribute statistics after normalisation and removal of outliers}{table.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces The white wine attribute statistics after removal of outliers and normalisation.}}{2}{table.1}}
+\newlabel{tab:normalisedw}{{1}{2}{The white wine attribute statistics after removal of outliers and normalisation}{table.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces The red wine attribute statistics after removal of outliers and normalisation.}}{2}{table.2}}
+\newlabel{tab:normalisedr}{{2}{2}{The red wine attribute statistics after removal of outliers and normalisation}{table.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}\hskip -1em.\nobreakspace  {}Learning approach}{2}{subsection.2.1}}
+\newlabel{eq:1}{{1}{2}{\hskip -1em.~Learning approach}{equation.2.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}\hskip -1em.\nobreakspace  {}Baseline Predictors}{2}{section.3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}\hskip -1em.\nobreakspace  {}L1 loss function}{2}{subsection.3.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Loss Function = $\DOTSB \sum@ \slimits@ _{i = 1}^{n} \abs  {y_i - f(x_i)}$, Training Error = 0.321, Testing Error = 0.373}}{2}{figure.2}}
-\newlabel{fig:l1loss}{{2}{2}{Loss Function = $\sum _{i = 1}^{n} \abs {y_i - f(x_i)}$, Training Error = 0.321, Testing Error = 0.373}{figure.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Loss Function = $\DOTSB \sum@ \slimits@ _{i = 1}^{n} \abs  {y_i - f(x_i)}$, Training Error = 0.321, Testing Error = 0.373}}{2}{figure.3}}
+\newlabel{fig:l1loss}{{3}{2}{Loss Function = $\sum _{i = 1}^{n} \abs {y_i - f(x_i)}$, Training Error = 0.321, Testing Error = 0.373}{figure.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}\hskip -1em.\nobreakspace  {}L2 loss function}{2}{subsection.3.2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Loss Function = $\DOTSB \sum@ \slimits@ _{i = 1}^{n} (y_i - f(x_i))^2$, Training Error = 0.271, Testing Error = 0.276}}{2}{figure.3}}
-\newlabel{fig:l2loss}{{3}{2}{Loss Function = $\sum _{i = 1}^{n} (y_i - f(x_i))^2$, Training Error = 0.271, Testing Error = 0.276}{figure.3}{}}
 \citation{Cortes1995}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Loss Function = $\DOTSB \sum@ \slimits@ _{i = 1}^{n} (y_i - f(x_i))^2$, Training Error = 0.271, Testing Error = 0.276}}{3}{figure.4}}
+\newlabel{fig:l2loss}{{4}{3}{Loss Function = $\sum _{i = 1}^{n} (y_i - f(x_i))^2$, Training Error = 0.271, Testing Error = 0.276}{figure.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Training Error = $\DOTSB \sum@ \slimits@ _{i = 1}^{n} (y_i - f(x_i))^2$ ($L_2$ loss), Epochs = 100, Learning Rate = variable}}{3}{figure.5}}
+\newlabel{fig:break}{{5}{3}{Training Error = $\sum _{i = 1}^{n} (y_i - f(x_i))^2$ ($L_2$ loss), Epochs = 100, Learning Rate = variable}{figure.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}\hskip -1em.\nobreakspace  {}Improvements}{3}{subsection.3.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}\hskip -1em.\nobreakspace  {}More Advanced Algorithms}{3}{section.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}\hskip -1em.\nobreakspace  {}Neural Network}{3}{subsection.4.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}\hskip -1em.\nobreakspace  {}Support Vector Regression}{3}{subsection.4.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}\hskip -1em.\nobreakspace  {}Elastic Net Regularisation}{3}{subsection.4.3}}
 \bibstyle{ieee}
 \bibdata{egbib}
 \bibcite{tensorflow2015-whitepaper}{1}
@@ -45,10 +55,12 @@
 \bibcite{CrossValidation}{3}
 \bibcite{mckinneypandas}{4}
 \bibcite{WineQuality}{5}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Training Error = $\DOTSB \sum@ \slimits@ _{i = 1}^{n} (y_i - f(x_i))^2$ ($L_2$ loss), Epochs = 100, Learning Rate = variable}}{3}{figure.4}}
-\newlabel{fig:break}{{4}{3}{Training Error = $\sum _{i = 1}^{n} (y_i - f(x_i))^2$ ($L_2$ loss), Epochs = 100, Learning Rate = variable}{figure.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}\hskip -1em.\nobreakspace  {}Improvements}{3}{subsection.3.3}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}\hskip -1em.\nobreakspace  {}More Advanced Algorithms}{3}{section.4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}\hskip -1em.\nobreakspace  {}Neural Network}{3}{subsection.4.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}\hskip -1em.\nobreakspace  {}Support Vector Regression}{3}{subsection.4.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}\hskip -1em.\nobreakspace  {}Elastic Net Regularisation}{3}{subsection.4.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}\hskip -1em.\nobreakspace  {}Results}{4}{section.5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}\hskip -1em.\nobreakspace  {}Linear Regression}{4}{subsection.5.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}\hskip -1em.\nobreakspace  {}Neural Networks}{4}{subsection.5.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}\hskip -1em.\nobreakspace  {}Support Vector Regression}{4}{subsection.5.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}\hskip -1em.\nobreakspace  {}Elastic Net Regression}{4}{subsection.5.4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Best Neural Network White Wine predictor.}}{4}{figure.6}}
+\newlabel{fig:wwbest}{{6}{4}{Best Neural Network White Wine predictor}{figure.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Best Neural Network Red Wine predictor}}{4}{figure.7}}
+\newlabel{fig:rwbest}{{7}{4}{Best Neural Network Red Wine predictor}{figure.7}{}}

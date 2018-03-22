@@ -6,9 +6,9 @@ import helpers as hp
 
 def load_ds(_path, _w, _r):
     w_ds = pd.read_csv(_path + _w, sep = ';')
-    r_ds = pd.read_csv(_path + _r, sep = ';')
-    ds = pd.concat([w_ds, r_ds])
-    return ds
+    # r_ds = pd.read_csv(_path + _r, sep = ';')
+    # ds = pd.concat([w_ds, r_ds])
+    return w_ds
 
 def normalise_ds(ds, cols):
     for col in cols:
@@ -54,7 +54,7 @@ no_outliers_ds = rm_outliers_ds(norm_ds, hp.THRESHOLD, column_list[0:-1])
 print("The range in wine quality is {0}".format(np.sort(no_outliers_ds['quality'].unique())))
 # no_outliers_ds.groupby(['quality']).count()
 copy_ds = no_outliers_ds.copy()
-copy_ds.to_csv('../data/winequality-fixed.csv', index=False)
+# copy_ds.to_csv('../data/winequality-white-fixed.csv', index=False)
 data_info(copy_ds)
 
 # bins = [3, 5, 9]

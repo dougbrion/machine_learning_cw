@@ -78,7 +78,7 @@ def calc_error_reg_L2(_X, _y, _W, _b, cost_fn, _scale):
     cost += reg_cost
     return pred, cost
 
-def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate, _cost_fn, _regularisation, _cross_val, _el_params):
+def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate, _cost_fn, _regularisation, _cross_val, _el_params=[1.,1.]):
     reg_type, reg_scale = _regularisation
     X = tf.placeholder(tf.float32, [None, hp.num_features(_train_X)], name="input")
     y = tf.placeholder(tf.float32, name="output")

@@ -43,25 +43,33 @@ CID: 01052925\\
 %%%%%%%%% BODY TEXT
 \section{Introduction}
 
-This report examines different approaches to predicting wine quality using the Wine Quality~\cite{WineQuality} dataset. This is a large dataset containing 4898 samples of white wines and 1599 of red. Throughout this report wine quality is examined using regression, attempting to predict the quality of a wine from various input parameters. Multiple learning methods are implemented, discussed and compared in order to obtain a predictor with the smallest test error possible.
+This report examines different approaches to predicting wine quality using the Wine Quality~\cite{WineQuality} dataset. This is a large dataset containing 4898 samples of white wines and 1599 of red. Throughout this report wine quality is examined using regression, the standard approach when modelling continuous data, attempting to predict the quality of a wine from various input parameters. Multiple learning methods are implemented, discussed and compared in order to obtain a predictor with the smallest test error possible.
 
-All code for this report was written in Python and used the library Pandas~\cite{mckinneypandas} for importing and manipulating data and Tensorflow~\cite{tensorflow2015-whitepaper} for creating and training models to predict the data.
+All code for this report was written in Python using the libraries Pandas~\cite{mckinneypandas} for importing and manipulating data and Tensorflow~\cite{tensorflow2015-whitepaper} for creating and training models to predict the data.
 
 %-------------------------------------------------------------------------
 \section{Data Preparation}
-Both red and white wine datasets were available and it was decided to combine both into a single dataset consisting of 6497 samples in order to learn how to predict the quality of either a red or white wine. 
+Ad red and white wine have different tastes, it was decided to learn on both separately as they have a different chemical composition. The white wine dataset contains 4898 samples and the red 1599. The objective in this report is to establish how well the quality of each wine can be predicted using the datasets.
 
-The data provided in the now combined dataset was not normalised, therefore each attribute was normalised with respect to it's mean and standard deviation. Outliers over a threshold of $Thres = 5$ from each attribute were then removed to reduce noise in the dataset for training. This altered data was output to 
-\verb|winequality-fixed.csv|.
+It should be noted that this data is likely to be unreliable with a large amount of noise as quality is measured with a human sense, taste a very personal sense which can range widely person to person.
+
+The data provided was not normalised, therefore each attribute was normalised with respect to it's mean and standard deviation. Outliers over a threshold of for each attribute were removed to reduce noise in the dataset for training. Table \ref{tab:normalisedw} and Table \ref{tab:normalisedr} show the normalised physiochemical attributes for the datasets with outliers removed. 
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.9\linewidth]{img/samples.png}
+		\includegraphics[width=0.9\linewidth]{img/white_samples.png}
 	\end{center}
-	\caption{The histogram for both white wine and red wine qualities.}
+	\caption{The histogram for white wine qualities.}
 	\label{fig:hist}
 \end{figure}
 
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\linewidth]{img/red_samples.png}
+	\end{center}
+	\caption{The histogram for red wine qualities.}
+	\label{fig:histr}
+\end{figure}
 
 \begin{table}[h]
 	\begin{center}
@@ -69,22 +77,22 @@ The data provided in the now combined dataset was not normalised, therefore each
 			\hline
 			Attributes & Mean & Std & Min & Max \\
 			\hline
-			fixed acidity & 7.22 & 1.30 & 3.80 & 15.9 \\
-			volatile acidity & 0.34 & 0.16 & 0.08 & 1.58 \\
-			citric acid & 0.32 & 0.15 & 0.00 & 1.66 \\
-			residual sugar & 5.44 & 4.76 & 0.60 & 65.8 \\
-			chlorides & 0.06 & 0.04 & 0.01 & 0.61 \\
-			free sulfur dioxide & 30.5 & 17.8 & 1.00 & 289 \\
-			total sulfur dioxide & 116 & 56.5 & 6.00 & 440 \\
-			density & 0.99 & 0.00 & 0.98 & 1.04 \\
-			pH & 3.22 & 0.16 & 2.72 & 4.01 \\
-			sulphates & 0.53 & 0.15 & 0.22 & 2.00 \\
-			alcohol & 10.5 & 1.19 & 8.00 & 14.9 \\ 
+			fixed acidity & -0.003 & 0.989 & -3.62 & 4.557 \\
+			volatile acidity & -0.012 & 0.961 & -1.967 & 4.979 \\
+			citric acid & -0.010 & 0.963 & -2.762 & 4.758 \\
+			residual sugar & -0.002 & 0.986 & -1.142 & 4.971 \\
+			chlorides & -0.078 & 0.662 & 1.683 & 4.954 \\
+			free sulfur dioxide & -0.010 & 0.956 & -1.959 & 4.892 \\
+			total sulfur dioxide & -0.003 & 0.992 & -3.044 & 4.839 \\
+			density & -0.005 & 0.971 & -2.313 & 2.984 \\
+			pH & 0.000 & 1.000 & 3.101 & 4.184 \\
+			sulphates & -0.001 & 0.997 & -2.365 & 4.996 \\
+			alcohol & 0.000 & 1.000 & -2.043 & 2.995 \\ 
 			\hline
 		\end{tabular}
 	\end{center}
-	\caption{The attribute statistics before normalisation and removal of outliers.}
-	\label{tab:attributes}
+	\caption{The white wine attribute statistics after removal of outliers and normalisation.}
+	\label{tab:normalisedw}
 \end{table}
 
 \begin{table}[h]
@@ -93,23 +101,25 @@ The data provided in the now combined dataset was not normalised, therefore each
 			\hline
 			Attributes & Mean & Std & Min & Max \\
 			\hline
-			fixed acidity & -0.012 & 0.965 & -2.635 & 4.848 \\
-			volatile acidity & -0.005 & 0.984 & -1.577 & 4.800 \\
-			citric acid & -0.002 & 0.990 & -2.193 & 4.689 \\
-			residual sugar & -0.004 & 0.983 & -1.018 & 4.331 \\
-			chlorides & -0.049 & 0.740 & -1.343 & 4.966 \\
-			free sulfur dioxide & -0.008 & 0.968 & -1.664 & 4.957 \\
-			total sulfur dioxide & -0.001 & 0.998 & -1.942 & 4.437 \\
-			density & -0.004 & 0.979 & -2.530 & 2.999 \\
-			pH & 0.000 & 1.000 & -3.101 & 4.923 \\
-			sulphates & -0.017 & 0.936 & -2.092 & 4.898 \\
-			alcohol & 0.000 & 1.000 & -2.089 & 3.696 \\ 
+			fixed acidity & 0.000 & 1.000 & -2.137 & 4.355 \\
+			volatile acidity & -0.004 & 0.989 & -2.278 & 4.481 \\
+			citric acid & 0.000 & 1.000 & -1.391 &  3.744 \\
+			residual sugar & -0.053 & 0.764 & -1.163 & 4.584 \\
+			chlorides & -0.096 & 0.552 & -1.604 & 3.880 \\
+			free sulfur dioxide & -0.003 & 0.991 & -1.423 & 4.985 \\
+			total sulfur dioxide & -0.009 & 0.967 & -1.231 & 3.604 \\
+			density & 0.000 & 1.000 & -3.539 & 3.680 \\
+			pH & 0.000 & 1.000 & -3.700 & 4.528 \\
+			sulphates & -0.033 & 0.879 & -1.936 & 4.142 \\
+			alcohol & 0.000 & 1.000 & -1.899 & 4.202 \\ 
 			\hline
 		\end{tabular}
 	\end{center}
-	\caption{The attribute statistics after normalisation and removal of outliers.}
-	\label{tab:normalised}
+	\caption{The red wine attribute statistics after removal of outliers and normalisation.}
+	\label{tab:normalisedr}
 \end{table}
+
+The spread in quality for both data sets is not ideal with the histograms Fig \ref{fig:hist} and Fig \ref{fig:histr} illustrating the distribution. The quality of the wine is graded on a scale from 0 (really bad) to 10 (extremely good) with the datasets containing six/seven classes (3 to 8/9).
 
 The goal of this project will be to find a predictor with the best regression performance.
 
@@ -122,13 +132,10 @@ L_H = \begin{cases}
 \sum_{i = 1}^{n} \frac{1}{2} (y_i - f(x_i))^2, & for \abs{y_i - f(x_i)} \leq \delta. \\
 \sum_{i = 1}^{n} \delta \abs{y_i - f(x_i)} - \frac{1}{2} \delta^2, & otherwise.
 \end{cases}
+\label{eq:1}
 \end{equation}
 
-This shall be used on the test error of each of the models for comparison as each model will required a different training error.
-
-To validate which model is best they will also be tested using the Mean Absolute Deviation error metric (MAD) which is often used to test regression performance.
-
-K-fold cross validation~\cite{CrossValidation}, where data is divided into K parts and with one part being tested at a time and remaining data used for training, gives robust and reliable estimates of the performance of the given model, although results in an increased computation time.
+A robust procedure for estimation, \textit{k}-fold cross validation~\cite{CrossValidation}, where data is divided into \textit{k} parts and with one subset tested at a time and remaining data used for training. This methods results in all data being used for both training and testing, however requires a longer computation time.
 
 \section{Baseline Predictors}
 Several baseline predictors have been implemented and trained on the data. 
@@ -196,6 +203,7 @@ These relatively simple models can be improved upon by adding regularisation. Re
 \end{minipage}
 
 \section{More Advanced Algorithms}
+More advanced algorithms such as NNs and SVMs achieve high performance due to their non-linear learning capabilities. However due to this, these complex models are more likely to over-fit, losing the ability to generalise when given new data to test. Both SVMs, NNs and Elastic Regularisation have multiple hyper-parameters which need to be adjusted in order to find the best predictor.
 
 \subsection{Neural Network}
 The neural network implemented as a predictor for this project had 3 layers, 1 input, 1 hidden and 1 output. A single hidden layer was chosen as an increase in hidden layers did not result in a significant increase in predictor performance although it did lengthen training time.
@@ -204,7 +212,7 @@ The number of nodes in the hidden was chosen using a heuristic of the number bei
 
 Each layer could be assigned when the network is constructed to have a specific activation function such as: TanH, Sigmoid, ReLU, SeLU and Softmax. It was found that during training a hidden ReLU resulted in the best out of sample test error and therefore was chosen. 
 
-Neural networks have an advantage over standard linear regression that they can model non-linearities automatically however they are more likely to overfit the data so observing the out of sample error is especially important.
+Neural networks have an advantage over standard linear regression that they can model non-linearities automatically however they are more likely to over-fit the data so observing the out of sample error is especially important.
 
 The neural net used a gradient descent optimiser to minimise the loss function, and either $L_1$, $L_2$ or no regularisation can be selected for training. 
 
@@ -221,6 +229,43 @@ This loss function is known as the hinge loss.
 
 \subsection{Elastic Net Regularisation}
 The elastic net regression is a regularised method combining the $L_1$ and $L_2$ penalties of the lasso and ridge methods. A hyper-parameter, $\alpha$ between 1 and 0 controls how much of $L_1$ and $L_2$ penalisation is used.
+
+\section{Results}
+In order to evaluate the possible models to find the best predictor, 10-fold cross validation was run for each model. Results graphs will illustrate the error of the model over the epochs with the final error for that models loss function shown as 'final error' in the legend. The final model after learning is then tested using Huber Loss \ref{eq:1} also shown in the legend. This is used to compare the various models against each other after training.
+
+\subsection{Linear Regression}
+For linear regression it was found that regularisation did not improve the performance of the predictor. As regularisation is used to help prevent over-fitting, and as basic linear regression is not as prone to over-fitting the data it was found that adding regularisation did not improve the performance.
+
+\subsection{Neural Networks}
+It was found that ReLU for both hidden and output layers was by far the most effective activation function. This may be because the ReLU function does not suffer from the vanishing gradient problem unlike functions such as tanh and sigmoid where the updating of weights can be prevented by a tiny gradient. 
+
+It was also found that regularisation greatly improved the performance of neural net predictors. After running extensive tests with varying parameters and comparing the huber error of each of them, the best performing networks for both the white and red wine data sets can be seen below. Notice how Red wine has a smaller error as the quality is concentrated at values 5 and 6, this also may explain why $L_2$ regularisation fairs better.
+
+Regularisation is especially important for the neural nets as they have a tendency to over-fit. However the regularisation parameter, $\lambda$ has to be tuned correctly to avoid not fitting the data at all.
+
+Neural nets have a disadvantage over other methods proposed in this report as they may arrive a local minima during the learning phase, a problem algorithms such as SVRs do not encounter.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\linewidth]{img/best_white_nn.png}
+	\end{center}
+	\caption{Best Neural Network White Wine predictor.}
+	\label{fig:wwbest}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\linewidth]{img/best_red_nn.png}
+	\end{center}
+	\caption{Best Neural Network Red Wine predictor}
+	\label{fig:rwbest}
+\end{figure}
+
+\subsection{Support Vector Regression}
+
+\subsection{Elastic Net Regression}
+
+
 
 
 {\small
