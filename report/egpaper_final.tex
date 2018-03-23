@@ -43,99 +43,76 @@ CID: 01052925\\
 %%%%%%%%% BODY TEXT
 \section{Introduction}
 
-This report examines different approaches to predicting wine quality using the Wine Quality~\cite{WineQuality} dataset. This is a large dataset containing 4898 samples of white wines and 1599 of red. Throughout this report wine quality is examined using regression, the standard approach when modelling continuous data, attempting to predict the quality of a wine from various input parameters. Multiple learning methods are implemented, discussed and compared in order to obtain a predictor with the smallest test error possible.
+This report examines different approaches to predicting wine quality using the Wine Quality~\cite{WineQuality} dataset. This is a large dataset containing 4898 samples of white wines and 1599 red. Throughout this report wine quality is examined using regression, the standard approach when modelling continuous data, attempting to predict the quality of a wine from various input parameters. Multiple learning methods are implemented, discussed and compared in order to obtain a predictor with the smallest test error possible.
 
 All code for this report was written in Python using the libraries Pandas~\cite{mckinneypandas} for importing and manipulating data and Tensorflow~\cite{tensorflow2015-whitepaper} for creating and training models to predict the data.
 
+The objective of this report is to identify the predictor with the best regression performance.
+
 %-------------------------------------------------------------------------
 \section{Data Preparation}
-Ad red and white wine have different tastes, it was decided to learn on both separately as they have a different chemical composition. The white wine dataset contains 4898 samples and the red 1599. The objective in this report is to establish how well the quality of each wine can be predicted using the datasets.
+As red and white wine have different tastes, it was decided to learn on them separately as they differ in chemical composition. The objective in this report is to establish how well the quality of each wine can be predicted using the datasets.
 
-It should be noted that this data is likely to be unreliable with a large amount of noise as quality is measured with a human sense, taste a very personal sense which can range widely person to person.
+It should be noted that this data is likely to be unreliable and noisy for quality was measured with a human sense, taste, a very personal metric which can range widely from person to person.
 
-The data provided was not normalised, therefore each attribute was normalised with respect to it's mean and standard deviation. Outliers over a threshold of for each attribute were removed to reduce noise in the dataset for training. Table \ref{tab:normalisedw} and Table \ref{tab:normalisedr} show the normalised physiochemical attributes for the datasets with outliers removed. 
+The data was normalised with respect to it's mean and to a standard deviation of one. Outliers over a threshold of for each attribute were removed to reduce noise in the dataset for training. Tab \ref{tab:normalised} shows the normalised physiochemical attributes for the datasets with outliers removed. 
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.9\linewidth]{img/white_samples.png}
+		\includegraphics[width=0.8\linewidth]{img/white_samples.png}
 	\end{center}
 	\caption{The histogram for white wine qualities.}
-	\label{fig:hist}
+	\label{fig:histwhite}
 \end{figure}
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.9\linewidth]{img/red_samples.png}
+		\includegraphics[width=0.8\linewidth]{img/red_samples.png}
 	\end{center}
 	\caption{The histogram for red wine qualities.}
-	\label{fig:histr}
+	\label{fig:histred}
 \end{figure}
 
-\begin{table}[h]
+\begin{table*}
 	\begin{center}
-		\begin{tabular}{|l|c|c|c|c|}
+		\begin{tabular}{|l|cc|cc|cc|cc|}
 			\hline
-			Attributes & Mean & Std & Min & Max \\
+			Attributes 			& Mean 	& 		& Std 	& 		& Min 	& 		& Max 	&		\\
+								& White & Red 	& White & Red 	& White & Red 	& White & Red \\
 			\hline
-			fixed acidity & -0.003 & 0.989 & -3.62 & 4.557 \\
-			volatile acidity & -0.012 & 0.961 & -1.967 & 4.979 \\
-			citric acid & -0.010 & 0.963 & -2.762 & 4.758 \\
-			residual sugar & -0.002 & 0.986 & -1.142 & 4.971 \\
-			chlorides & -0.078 & 0.662 & 1.683 & 4.954 \\
-			free sulfur dioxide & -0.010 & 0.956 & -1.959 & 4.892 \\
-			total sulfur dioxide & -0.003 & 0.992 & -3.044 & 4.839 \\
-			density & -0.005 & 0.971 & -2.313 & 2.984 \\
-			pH & 0.000 & 1.000 & 3.101 & 4.184 \\
-			sulphates & -0.001 & 0.997 & -2.365 & 4.996 \\
-			alcohol & 0.000 & 1.000 & -2.043 & 2.995 \\ 
+			fixed acidity 		& -0.003 & 0.000 & 0.989 & 1.000& -3.62 &-2.137 & 4.557 & 4.355 \\
+			volatile acidity 	& -0.012 & -0.004 & 0.961 &0.989 & -1.967 &-2.278& 4.979 & 4.481\\
+			citric acid 		& -0.010 & 0.000 & 0.963 & 1.000&-2.762 &-1.391& 4.758 & 3.744\\
+			residual sugar 		& -0.002 & -0.053 & 0.986 & 0.764&-1.142 &-1.163& 4.971 & 4.584\\
+			chlorides 			& -0.078 & -0.096 & 0.662 &0.552 &1.683 &-1.604& 4.954 & 3.880\\
+			free sulfur dioxide & -0.010 & -0.003 & 0.956 & 0.991&-1.959 &-1.423& 4.892 & 4.985\\
+			total sulfur dioxide & -0.003 & -0.009 & 0.992 & 0.967&-3.044 &-1.231& 4.839 & 3.604\\
+			density 			& -0.005 & 0.000 & 0.971 & 1.000&-2.313 &-3.539& 2.984 & 3.680\\
+			pH 					& 0.000 & 0.000 & 1.000 & 1.000&3.101 &-3.700& 4.184 & 4.528\\
+			sulphates 			& -0.001 & -0.033 & 0.997 & 0.879&-2.365 &-1.936& 4.996 & 4.142\\
+			alcohol 			& 0.000 & -0.000 & 1.000 &1.000 &-2.043 &-1.899& 2.995 & 4.202\\ 
 			\hline
 		\end{tabular}
 	\end{center}
-	\caption{The white wine attribute statistics after removal of outliers and normalisation.}
-	\label{tab:normalisedw}
-\end{table}
+	\caption{The white and red wine attribute statistics after removal of outliers and normalisation.}
+	\label{tab:normalised}
+\end{table*}
 
-\begin{table}[h]
-	\begin{center}
-		\begin{tabular}{|l|c|c|c|c|}
-			\hline
-			Attributes & Mean & Std & Min & Max \\
-			\hline
-			fixed acidity & 0.000 & 1.000 & -2.137 & 4.355 \\
-			volatile acidity & -0.004 & 0.989 & -2.278 & 4.481 \\
-			citric acid & 0.000 & 1.000 & -1.391 &  3.744 \\
-			residual sugar & -0.053 & 0.764 & -1.163 & 4.584 \\
-			chlorides & -0.096 & 0.552 & -1.604 & 3.880 \\
-			free sulfur dioxide & -0.003 & 0.991 & -1.423 & 4.985 \\
-			total sulfur dioxide & -0.009 & 0.967 & -1.231 & 3.604 \\
-			density & 0.000 & 1.000 & -3.539 & 3.680 \\
-			pH & 0.000 & 1.000 & -3.700 & 4.528 \\
-			sulphates & -0.033 & 0.879 & -1.936 & 4.142 \\
-			alcohol & 0.000 & 1.000 & -1.899 & 4.202 \\ 
-			\hline
-		\end{tabular}
-	\end{center}
-	\caption{The red wine attribute statistics after removal of outliers and normalisation.}
-	\label{tab:normalisedr}
-\end{table}
-
-The spread in quality for both data sets is not ideal with the histograms Fig \ref{fig:hist} and Fig \ref{fig:histr} illustrating the distribution. The quality of the wine is graded on a scale from 0 (really bad) to 10 (extremely good) with the datasets containing six/seven classes (3 to 8/9).
-
-The goal of this project will be to find a predictor with the best regression performance.
+The spread in quality for both data sets is not ideal for learning with the histograms Fig \ref{fig:histwhite} and Fig \ref{fig:histred} illustrating the distribution. The quality of the wine is graded on a scale from 0 (really bad) to 10 (extremely good) with the datasets containing six/seven classes (3 to 8/9). The red wine dataset is especially concentrated in the quality values 5 and 6. 
 
 \subsection{Learning approach}
 
-For consistency all the different regressions performances of each model with varying parameters and training cost functions will be measured using the same error metric, the Huber Loss function. This is a good loss function for this regression problem as it is robust to outliers, for if the difference between the real and predicted value is small it will be squared, if large, the absolute value will be taken.
+For consistency the performance of each model with varying parameters and training cost functions will be measured using the same error metric, the Huber Loss function. This is a good loss function for this regression problem as it is robust to outliers, for if the difference between the real and predicted value is small it will be squared, if large, the absolute value will be taken.
 
 \begin{equation}
 L_H = \begin{cases}
-\sum_{i = 1}^{n} \frac{1}{2} (y_i - f(x_i))^2, & for \abs{y_i - f(x_i)} \leq \delta. \\
-\sum_{i = 1}^{n} \delta \abs{y_i - f(x_i)} - \frac{1}{2} \delta^2, & otherwise.
+\sum_{i = 1}^{n} \frac{1}{2} (y_i - f(x_i))^2, & \text{for\ } \abs{y_i - f(x_i)} \leq \delta. \\
+\sum_{i = 1}^{n} \delta \abs{y_i - f(x_i)} - \frac{1}{2} \delta^2, & \text{otherwise.}
 \end{cases}
-\label{eq:1}
+\label{eq:huber}
 \end{equation}
 
-A robust procedure for estimation, \textit{k}-fold cross validation~\cite{CrossValidation}, where data is divided into \textit{k} parts and with one subset tested at a time and remaining data used for training. This methods results in all data being used for both training and testing, however requires a longer computation time.
+A robust procedure for estimation was used, \textit{k}-fold cross validation~\cite{CrossValidation}, where data is divided into \textit{k} parts and with one subset tested at a time and remaining data used for training. This methods results in all data being used for both training and testing, however requires a longer computation time.
 
 \section{Baseline Predictors}
 Several baseline predictors have been implemented and trained on the data. 
@@ -144,97 +121,130 @@ A linear regression program was written in Python using Tensorflow~\cite{tensorf
 
 For linear regression 2 basic loss functions were implemented first.
 
-\subsection{L1 loss function}
-The $L_1$ loss function, least absolute deviations, tries to minimise the absolute difference between the predicted and real values. The sum of all the differences for all the samples can be described as follows:
+\subsection{LASSO loss function}
+The LASSO loss function tries to minimise the absolute difference between the predicted and real values. The sum of all the differences for all the samples can be described as follows:
 
 \begin{equation}
-L_1 = \sum_{i = 1}^{n} \abs{y_i - f(x_i)}
+L_{LASSO} = \sum_{i = 1}^{n} \abs{y_i - f(x_i)}
+\label{eq:lasso}
 \end{equation}
 
-This is a fairly robust loss function which is not that affected by outliers.
+This is a fairly robust loss function which is not that affected by outliers. 
 
-\begin{figure}[h]
-	\begin{center}
-		\includegraphics[width=0.9\linewidth]{img/l1loss.png}
-	\end{center}
-	\caption{Loss Function = $\sum_{i = 1}^{n} \abs{y_i - f(x_i)}$, Training Error = 0.321, Testing Error = 0.373}
-	\label{fig:l1loss}
-\end{figure}
-
-\subsection{L2 loss function}
-The $L_2$ loss function, least square error, minimises the square difference between the predicted and real values. This value is much large than that of $L_1$ loss and therefore is more affected by outliers, however, will optimise the predictor faster.
+\subsection{Ridge loss function}
+The Ridge loss function, least square error, minimises the square difference between the predicted and real values. This value is much larger than that of LASSO loss and therefore is more affected by outliers, however, will optimise the predictor faster.
 
 \begin{equation}
-L_2 = \sum_{i = 1}^{n} (y_i - f(x_i))^2
+L_{Ridge} = \sum_{i = 1}^{n} (y_i - f(x_i))^2
+\label{eq:ridge}
 \end{equation}
 
-\begin{figure}[h]
-	\begin{center}
-		\includegraphics[width=0.9\linewidth]{img/l2loss.png}
-	\end{center}
-	\caption{Loss Function = $\sum_{i = 1}^{n} (y_i - f(x_i))^2$, Training Error = 0.271, Testing Error = 0.276}
-	\label{fig:l2loss}
-\end{figure}
+Notice how the predictor using the Ridge loss function in \ref{fig:l2loss} minimises the error faster than the LASSO loss in \ref{fig:l1loss}. Additionally, as outliers have been removed in data preparation the Ridge loss is also quite robust.
 
-Notice how the predictor using the $L_2$ loss function in \ref{fig:l2loss}. minimises the error much faster than the $L_1$ loss in \ref{fig:l1loss} and as outliers have been removed in data preparation the $L_2$ loss is quite robust.
-
-As the epochs are increased the optimiser is able to reduce the loss until no improvements can be made. The learning rate also greatly affects the rate at which the loss is minimised. However, if the learning rate is too high the predictor will not improve on the training data, as can be seen in \ref{fig:break}.
+As the epochs are increased the optimiser is able to reduce the loss until no substantail improvements are made. The learning rate also greatly affects the rate at which the loss is minimised. However, if the learning rate is too high the predictor might not improve in training and may get worse, as can be seen in \ref{fig:break}. (see \textbf{Appendix} to compare LASSO and Ridge)
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.9\linewidth]{img/linrbreak.png}
+		\includegraphics[width=0.8\linewidth]{img/linrbreak.png}
 	\end{center}
 	\caption{Training Error = $\sum_{i = 1}^{n} (y_i - f(x_i))^2$ ($L_2$ loss), Epochs = 100, Learning Rate = variable}
 	\label{fig:break}
 \end{figure}
 
-\subsection{Improvements}
-These relatively simple models can be improved upon by adding regularisation. Regularisation is a technique used to prevent over fitting the data. Both $L_1$ and $L_2$ regularisation have been implemented, being the sum of the weights and sum of the square weights respectively. The regularisation term is added to the loss function, the terms for $L_1$ and $L_2$ look as follows:
+\subsection{Regularisation}
+These relatively simple models can be improved upon by adding regularisation. Regularisation is a technique used to prevent over-fitting the data. Both $L_1$, $L_2$ and Elastic Net regularisation have been implemented, being the sum of the weights and sum of the square weights and combination of the two respectively. The regularisation term is added to the loss function, the terms for $L_1$ and $L_2$ look as follows:
 
+\begin{center}
 \noindent\begin{minipage}{.5\linewidth}
 	\begin{equation}
-	L_{1reg} = \lambda \sum_{i = 1}^{n} \abs{w_i}
+	L_1 = \lambda \sum_{i = 1}^{n} \abs{w_i}
+	\label{eq:reg1}
 	\end{equation}
 \end{minipage}%
 \begin{minipage}{.5\linewidth}
 	\begin{equation}
-	L_{2reg} = \lambda \sum_{i = 1}^{n} w_i^2
+	L_2 = \lambda \sum_{i = 1}^{n} \abs{w_i}^2
+	\label{eq:reg2}
 	\end{equation}
 \end{minipage}
+\end{center}
+
+The elastic net regularisation combines the $L_1$ and $L_2$ penalties of the methods described in Eq \ref{eq:reg1} and Eq \ref{eq:reg2}. A hyper-parameter, $\alpha$ between 1 and 0 controls how much of $L_1$ and $L_2$ penalisation is used.
+
+\begin{equation}
+L_{elastic} = \sum_{i = 1}^{n} \lambda (\alpha\abs{w_i} + (1-\alpha)\abs{w_i}^2)
+\label{eq:elastic}
+\end{equation}
+
+The computation time for elastic net regularisation is longer than standard LASSO or Ridge due to the additional hyper parameter $\alpha$. 
 
 \section{More Advanced Algorithms}
-More advanced algorithms such as NNs and SVMs achieve high performance due to their non-linear learning capabilities. However due to this, these complex models are more likely to over-fit, losing the ability to generalise when given new data to test. Both SVMs, NNs and Elastic Regularisation have multiple hyper-parameters which need to be adjusted in order to find the best predictor.
+More advanced algorithms such as Neural Networks can achieve high performance due to their non-linear learning capabilities. However due to this, these complex models are more likely to over-fit, losing the ability to generalise when given new data to test. Linear Support Vector Regression and Neural Networks have multiple hyper-parameters which need to be adjusted in order to find the best predictor.
 
 \subsection{Neural Network}
-The neural network implemented as a predictor for this project had 3 layers, 1 input, 1 hidden and 1 output. A single hidden layer was chosen as an increase in hidden layers did not result in a significant increase in predictor performance although it did lengthen training time.
-
-The number of nodes in the hidden was chosen using a heuristic of the number being the mean of the input and output layers, in this case resulting in 6 nodes.
-
-Each layer could be assigned when the network is constructed to have a specific activation function such as: TanH, Sigmoid, ReLU, SeLU and Softmax. It was found that during training a hidden ReLU resulted in the best out of sample test error and therefore was chosen. 
-
 Neural networks have an advantage over standard linear regression that they can model non-linearities automatically however they are more likely to over-fit the data so observing the out of sample error is especially important.
 
-The neural net used a gradient descent optimiser to minimise the loss function, and either $L_1$, $L_2$ or no regularisation can be selected for training. 
+The neural network implemented as a predictor for this report consisted of 3 layers: input, hidden and output. A single hidden layer was chosen as an increase in hidden layers did not result in a superior predictor performance, although computation time was lengthened.
+
+The number of nodes in the hidden was heuristically chosen as the mean of input and output layers, in this case resulting in 6 hidden nodes.
+
+Whilst being constructed, each layer in the network can be set to a specific activation function such as: TanH, Sigmoid, ReLU, SeLU and Softmax. It was discovered during training that hidden and output ReLU layers resulted in the best out of sample test error this activation function was chosen. 
+
+The neural net used a gradient descent optimiser to minimise the loss function, and either $L_1$, $L_2$ or no regularisation was selected for training. 
 
 \subsection{Support Vector Regression}
+
+
 The goal for a support vector regression (SVR)~\cite{Cortes1995} predictor is to find a predication $f(x)$ like our other predictors however it should have at most $\epsilon$ deviation from the real value $y_i$ for all the in sample data.
 
 The loss function for SVR is as follows:
 
 \begin{equation}
 L_{SVR} = max(0, \sum_{i = 1}^{n} \abs{y_i - f(x_i)} - \epsilon)
+\label{eq:svr}
 \end{equation}
 
 This loss function is known as the hinge loss.
 
-\subsection{Elastic Net Regularisation}
-The elastic net regression is a regularised method combining the $L_1$ and $L_2$ penalties of the lasso and ridge methods. A hyper-parameter, $\alpha$ between 1 and 0 controls how much of $L_1$ and $L_2$ penalisation is used.
-
 \section{Results}
-In order to evaluate the possible models to find the best predictor, 10-fold cross validation was run for each model. Results graphs will illustrate the error of the model over the epochs with the final error for that models loss function shown as 'final error' in the legend. The final model after learning is then tested using Huber Loss \ref{eq:1} also shown in the legend. This is used to compare the various models against each other after training. The plots are the average cross validation errors of the predictor after each 10 epochs.
+In order to evaluate the possible models to find the best predictor, 10-fold cross validation was run for each model ($90\%$ training, $10\%$ testing). Results graphs will illustrate the error of the model over the epochs with the final error for that models loss function shown as 'final error' in the legend. The final model after learning is then tested using Huber Loss \ref{eq:huber} also shown in the legend. This is used to compare the various models against each other after training. The plots are the average cross validation errors of the predictor after each 10 epochs.
 
 \subsection{Linear Regression}
 For linear regression it was found that regularisation did not improve the performance of the predictor. As regularisation is used to help prevent over-fitting, and as basic linear regression is not as prone to over-fitting the data it was found that adding regularisation did not improve the performance.
+
+Linear regression with both LASSO ($L_1$) and Ridge ($L_2$) loss functions is successful both with and without regularisation for both white and red wine. 
+
+For $L_1$ the huber loss test error consistently was approximately $0.2$ in the red wine dataset, with and without regularisation after $500$ epochs with a learning rate of $0.05$. The results for the $L_2$ loss function were very similar, however,  the error was decreased significantly faster due to the square term. 
+
+A small regularisation term proved to reduce the error for the ridge loss function.
+
+Elastic regularisation with an $L_2$ loss function and parameters $\alpha=0.5, \lambda=0.01$  produced the best performance overall with a huber loss after training of $0.171$ for red wine. It was found similar to lasso and ridge regularisation large parameter values worsened the final error causing under-fitting. 
+
+SVR when run with the elastic net proved to perform worse than without it. The combination of $\epsilon$ and the under-fitting from the regularistion resulted in a worse test error.
+
+\begin{table*}[h]
+	\begin{center}
+	\begin{tabular}{l|l|l|l|l|}
+		\cline{2-5}
+		& LASSO                                                                             & Ridge                                                                             & SVR                                                                                & Huber                                                                              \\ \hline
+		\multicolumn{1}{|l|}{No Reg}          & 0.264                                                                             & 0.260                                                                             & 0.271                                                                              & 0.256                                                                              \\ \hline
+		\multicolumn{1}{|l|}{L1 Reg}          & \begin{tabular}[c]{@{}l@{}}$\lambda = 0.0001$\\ 0.261\end{tabular}                & \begin{tabular}[c]{@{}l@{}}$\lambda = 0.001$\\ 0.268\end{tabular}                 & \begin{tabular}[c]{@{}l@{}}$\lambda = 0.001$\\ 0.267\end{tabular}                  & \begin{tabular}[c]{@{}l@{}}$\lambda = 0.01$\\ 0.265\end{tabular}                   \\ \hline
+		\multicolumn{1}{|l|}{L2 Reg}          & \begin{tabular}[c]{@{}l@{}}$\lambda = 0.0001$\\ 0.265\end{tabular}                & \begin{tabular}[c]{@{}l@{}}$\lambda = 0.1$\\ 0.261\end{tabular}                   & \begin{tabular}[c]{@{}l@{}}$\lambda = 0.01$\\ 0.269\end{tabular}                   & \begin{tabular}[c]{@{}l@{}}$\lambda = 0.1$\\ 0.260\end{tabular}                    \\ \hline
+		\multicolumn{1}{|l|}{Elastic Net Reg} & \begin{tabular}[c]{@{}l@{}}$\alpha = 0.1$\\ $\lambda = 0.01$\\ 0.260\end{tabular} & \begin{tabular}[c]{@{}l@{}}$\alpha = 0.01$\\ $\lambda = 0.3$\\ 0.257\end{tabular} & \begin{tabular}[c]{@{}l@{}}$\alpha = 0.1$\\ $\lambda = 0.001$\\ 0.257\end{tabular} & \begin{tabular}[c]{@{}l@{}}$\alpha = 0.5$\\ $\lambda = 0.001$\\ 0.263\end{tabular} \\ \hline
+	\end{tabular}
+\end{center}
+	\caption{Comparison of white wine best linear regression results after 500 epochs of training with a learning rate of 0.05.}
+	\label{my-label}
+\end{table*}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\linewidth]{img/l2_reg.png}
+	\end{center}
+	\caption{Red Wine - A good linear regression predictor with Ridge loss function and regularisation.}
+	\label{fig:l2reg}
+\end{figure}
+
 
 \subsection{Neural Networks}
 It was found that ReLU for both hidden and output layers was by far the most effective activation function. This may be because the ReLU function does not suffer from the vanishing gradient problem unlike functions such as tanh and sigmoid where the updating of weights can be prevented by a tiny gradient. 
@@ -262,11 +272,37 @@ Neural nets have a disadvantage over other methods proposed in this report as th
 \end{figure}
 
 \subsection{Support Vector Regression}
+The linear support vector regression approach had quite similar results to basic linear regression with LASSO or Ridge loss functions, although the results appeared to be more consistent. It was also found that having a large regularisation for SVR worsened the predictors performance as the data was under-fitting. The huber test loss after training for an SVR with no regularisation was $0.189$, however with $L_1$ regularisation with $\lambda = 0.1$ this was worsened to $0.272$.
 
-\subsection{Elastic Net Regression}
+The algorithm was also tested with a learning rate of $0.05$ and with $500$ epochs, achieving a huber test error of also around $0.2$. 
+
+\section{Conclusion}
+Models were trained and tested on a large dataset of both white and red wines. The task was to obtain a regression predictor with small test error. It was found that a linear approach to this problem was successful. Multiple basic and advanced algorithms were implemented and tested, resulting in the conclusion that neural network models over fit the data and require regularisation, however even with this do not compete with linear methods less prone to overfitting. 
+
+Most linear regression methods had a similar success rate, SVR appeared to be very consistent.
+
+It was found that the test error on the red wine data set was less than the white, this is due to the data being highly concentrated in the former, making the prediction task easier.
 
 
 
+
+\section{Appendix}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\linewidth]{img/l1loss.png}
+	\end{center}
+	\caption{Loss Function = $\sum_{i = 1}^{n} \abs{y_i - f(x_i)}$, Training Error = 0.321, Testing Error = 0.373}
+	\label{fig:l1loss}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\linewidth]{img/l2loss.png}
+	\end{center}
+	\caption{Loss Function = $\sum_{i = 1}^{n} (y_i - f(x_i))^2$, Training Error = 0.271, Testing Error = 0.276}
+	\label{fig:l2loss}
+\end{figure}
 
 {\small
 \bibliographystyle{ieee}

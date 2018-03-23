@@ -7,26 +7,24 @@ import random
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-
-
 def linr_plotter():
     learning_rate_list = [0.05]
     epochs_list = [500]
-    # cost_fn_list = [1, 2, 4, 5]
-    cost_fn_list = [3]
+    cost_fn_list = [1, 2, 4, 5]
+    # cost_fn_list = [3]
 
-    # regularisation_list = [0, 1, 2]
+    regularisation_list = [3]
     # reg_param_list = [0.0001, 0.001, 0.01, 0.1]
-    e_param1 = [0.001, 0.01, 0.1 0.3, 0.5, 0.7, 1.0]
-    e_param2 = [0.001, 0.01, 0.1, 0.3, 0.5, 0.7, 1.0]
+    lamb = [0.001, 0.01, 0.1, 0.3, 0.5, 0.7, 1.0]
+    alpha = [0.001, 0.01, 0.1, 0.3, 0.5, 0.7, 1.0]
 
     for i in epochs_list:
         for j in learning_rate_list:
             for k in cost_fn_list:
-                for l in e_param1:
-                    for m in e_param2:
+                for l in lamb:
+                    for m in alpha:
 
-                        ds = hp.load_ds(hp.PATH, hp.FIXED)
+                        ds = hp.load_ds(hp.PATH, hp.WHITEFIXED)
                         X, y = hp.split(ds)
 
                         y_size = len(y)
@@ -47,15 +45,15 @@ def linr_plotter():
                         elif k == 5:
                             loss_str = "Huber"
                         
-                        reg_str = ""
+                        reg_str = " Elastic Net: " + "α=" + str(m) + " λ=" + str(l)
                         # if l != 0:
                             # reg_str = ", Regularisation=L" + str(l) + ", Scale=" + str(m)
                         el = [l, m]
-                        reg = [0,0.0]
+                        reg = [3,0.0]
                         print("\nStarting Linear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j) + ", Loss Function=" + loss_str + reg_str + "\n10-fold Cross Validation")
                         x, y, tx, ty = linr.linear_regression(train_X, train_y, test_X, test_y, i, j, k, reg, True, el)
-                        filename = "../figs/RED_LINR_E" + str(i) + "_LR" + str(j) + "_LF" + str(k) + "_R" + str(l) + "_S" + str(m) + ".png"
-                        title = "Red Wine\nLinear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j) +"\n Loss Function=" + loss_str + reg_str
+                        filename = "../figs/WHITE_ELASTIC_LINR_E" + str(i) + "_LR" + str(j) + "_LF" + str(k) + "_R" + str(l) + "_S" + str(m) + ".png"
+                        title = "White Wine\nLinear Regression, Epochs=" + str(i) + ", Learning Rate=" + str(j) +"\n Loss Function=" + loss_str + reg_str
                         hp.plotter(title, x, y, tx, ty, 90, filename, True)
                         print("Finished Linear Regression.\n")
     

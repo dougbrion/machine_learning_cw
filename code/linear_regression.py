@@ -20,7 +20,7 @@ def elastic_error(_X, _y, _W, _b, _param1=1., _param2=1.):
     print("Elastic Net Parameters are p1 ", _param1, _param2)
     l1loss = tf.reduce_mean(tf.abs(_W))
     l2loss = tf.reduce_mean(tf.square(_W))
-    elastic1 = tf.multiply(param1, l1loss)
+    elastic1 = tf.multiply(param1, l1loss) 
     elastic2 = tf.multiply(param2, l2loss)
     cost = tf.expand_dims(tf.add(tf.add(tf.reduce_mean(tf.square(_y - pred)), elastic1), elastic2), 0)    
     return pred, cost
@@ -78,6 +78,16 @@ def calc_error_reg_L2(_X, _y, _W, _b, cost_fn, _scale):
     cost += reg_cost
     return pred, cost
 
+def calc_error_reg_elastic(_X, _y, _W, _b, cost_fn, _el_params=[1.,1.]):
+    print("Regularisation Elastic Net")
+    lamb, alpha = _el_params
+    l1 = tf.multiply(alpha, tf.norm(_W))
+    l2 = tf.multiply((1.0 - alpha), tf.square(tf.norm(_W)))
+    reg_cost = lamb * (l1 + l2)
+    pred, cost = calc_error(_X, _y, _W, _b, cost_fn)
+    cost += reg_cost
+    return pred, cost
+
 def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate, _cost_fn, _regularisation, _cross_val, _el_params=[1.,1.]):
     reg_type, reg_scale = _regularisation
     X = tf.placeholder(tf.float32, [None, hp.num_features(_train_X)], name="input")
@@ -93,6 +103,8 @@ def linear_regression(_train_X, _train_y, _test_X, _test_y, _epochs, _rate, _cos
         pred, cost = calc_error_reg_L1(X, y, W, b, _cost_fn, reg_scale)
     elif reg_type == 2:
         pred, cost = calc_error_reg_L2(X, y, W, b, _cost_fn, reg_scale)
+    elif reg_type == 3:
+        pred, cost = calc_error_reg_elastic(X, y, W, b, _cost_fn, _el_params)
     else:
         print("No Regularisation")
         pred, cost = calc_error(X, y, W, b, _cost_fn, _el_params)
