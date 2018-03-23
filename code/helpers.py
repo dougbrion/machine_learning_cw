@@ -50,8 +50,8 @@ def test(_sess, _XyWb, _cost, _test_X, _test_y, _type):
     
     elif _type == "nn":
         cost = np.sqrt(cost)
-    pred = tf.add(tf.matmul(W, X), b)
-    print("Value: ", _sess.run([pred], feed_dict={X: _test_X, y: _test_y}))
+    # pred = tf.add(tf.matmul(W, X), b)
+    # print("Value: ", _sess.run([pred], feed_dict={X: _test_X, y: _test_y}))
     # print("Cost=", cost, "W=", _sess.run(W), "b=", _sess.run(b), '\n')
     print("Cost=", cost)
     return cost
