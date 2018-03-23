@@ -36,8 +36,8 @@
 \newlabel{eq:lasso}{{2}{2}{\hskip -1em.~LASSO loss function}{equation.3.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}\hskip -1em.\nobreakspace  {}Ridge loss function}{2}{subsection.3.2}}
 \newlabel{eq:ridge}{{3}{2}{\hskip -1em.~Ridge loss function}{equation.3.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Training Error = $\DOTSB \sum@ \slimits@ _{i = 1}^{n} (y_i - f(x_i))^2$ ($L_2$ loss), Epochs = 100, Learning Rate = variable}}{2}{figure.3}}
-\newlabel{fig:break}{{3}{2}{Training Error = $\sum _{i = 1}^{n} (y_i - f(x_i))^2$ ($L_2$ loss), Epochs = 100, Learning Rate = variable}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Loss function = Ridge, Epochs = 100, Learning Rate = variable}}{2}{figure.3}}
+\newlabel{fig:break}{{3}{2}{Loss function = Ridge, Epochs = 100, Learning Rate = variable}{figure.3}{}}
 \citation{Cortes1995}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3}\hskip -1em.\nobreakspace  {}Regularisation}{3}{subsection.3.3}}
 \newlabel{eq:reg1}{{4}{3}{\hskip -1em.~Regularisation}{equation.3.4}{}}
@@ -45,30 +45,36 @@
 \newlabel{eq:elastic}{{6}{3}{\hskip -1em.~Regularisation}{equation.3.6}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}\hskip -1em.\nobreakspace  {}More Advanced Algorithms}{3}{section.4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}\hskip -1em.\nobreakspace  {}Neural Network}{3}{subsection.4.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}\hskip -1em.\nobreakspace  {}Support Vector Regression}{3}{subsection.4.2}}
-\newlabel{eq:svr}{{7}{3}{\hskip -1em.~Support Vector Regression}{equation.4.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}\hskip -1em.\nobreakspace  {}Support Vector Machine Regression}{3}{subsection.4.2}}
+\newlabel{eq:svr}{{7}{3}{\hskip -1em.~Support Vector Machine Regression}{equation.4.7}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5}\hskip -1em.\nobreakspace  {}Results}{3}{section.5}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1}\hskip -1em.\nobreakspace  {}Linear Regression}{3}{subsection.5.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Red Wine - A good linear regression predictor with Ridge loss function and regularisation.}}{4}{figure.4}}
-\newlabel{fig:l2reg}{{4}{4}{Red Wine - A good linear regression predictor with Ridge loss function and regularisation}{figure.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}\hskip -1em.\nobreakspace  {}Neural Networks}{4}{subsection.5.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}\hskip -1em.\nobreakspace  {}Support Vector Regression}{4}{subsection.5.3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Best Neural Network White Wine predictor.}}{4}{figure.5}}
-\newlabel{fig:wwbest}{{5}{4}{Best Neural Network White Wine predictor}{figure.5}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Best Neural Network Red Wine predictor}}{4}{figure.6}}
-\newlabel{fig:rwbest}{{6}{4}{Best Neural Network Red Wine predictor}{figure.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}\hskip -1em.\nobreakspace  {}Conclusion}{4}{section.6}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Comparison of \textbf  {white wine} best linear regression results after 500 epochs of training with a learning rate of 0.05. Comparison error is the Huber Loss Function run after training.}}{3}{table.2}}
+\newlabel{tab:whiteresults}{{2}{3}{Comparison of \textbf {white wine} best linear regression results after 500 epochs of training with a learning rate of 0.05. Comparison error is the Huber Loss Function run after training}{table.2}{}}
 \bibstyle{ieee}
 \bibdata{egbib}
 \bibcite{tensorflow2015-whitepaper}{1}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Comparison of \textbf  {red wine} best linear regression results after 500 epochs of training with a learning rate of 0.05. Comparison error is the Huber Loss Function run after training.}}{4}{table.3}}
+\newlabel{tab:redresults}{{3}{4}{Comparison of \textbf {red wine} best linear regression results after 500 epochs of training with a learning rate of 0.05. Comparison error is the Huber Loss Function run after training}{table.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Red Wine - A good linear regression predictor with Ridge loss function and regularisation.}}{4}{figure.4}}
+\newlabel{fig:l2reg}{{4}{4}{Red Wine - A good linear regression predictor with Ridge loss function and regularisation}{figure.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}\hskip -1em.\nobreakspace  {}Neural Networks}{4}{subsection.5.2}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Comparison of \textbf  {white wine} best neural network results after 500 epochs of training. Comparison error is the Huber Loss Function run after training.}}{4}{table.4}}
+\newlabel{tab:nncomp}{{4}{4}{Comparison of \textbf {white wine} best neural network results after 500 epochs of training. Comparison error is the Huber Loss Function run after training}{table.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Comparison of \textbf  {red wine} best neural network results after 500 epochs of training. Comparison error is the Huber Loss Function run after training.}}{4}{table.5}}
+\newlabel{tab:nncomp}{{5}{4}{Comparison of \textbf {red wine} best neural network results after 500 epochs of training. Comparison error is the Huber Loss Function run after training}{table.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}\hskip -1em.\nobreakspace  {}Support Vector Machine Regression}{4}{subsection.5.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}\hskip -1em.\nobreakspace  {}Conclusion}{4}{section.6}}
 \bibcite{Cortes1995}{2}
 \bibcite{CrossValidation}{3}
 \bibcite{mckinneypandas}{4}
 \bibcite{WineQuality}{5}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Comparison of white wine best linear regression results after 500 epochs of training with a learning rate of 0.05.}}{5}{table.2}}
-\newlabel{my-label}{{2}{5}{Comparison of white wine best linear regression results after 500 epochs of training with a learning rate of 0.05}{table.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {7}\hskip -1em.\nobreakspace  {}Appendix}{5}{section.7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Loss Function = $\DOTSB \sum@ \slimits@ _{i = 1}^{n} \abs  {y_i - f(x_i)}$, Training Error = 0.321, Testing Error = 0.373}}{5}{figure.7}}
-\newlabel{fig:l1loss}{{7}{5}{Loss Function = $\sum _{i = 1}^{n} \abs {y_i - f(x_i)}$, Training Error = 0.321, Testing Error = 0.373}{figure.7}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Loss Function = $\DOTSB \sum@ \slimits@ _{i = 1}^{n} (y_i - f(x_i))^2$, Training Error = 0.271, Testing Error = 0.276}}{5}{figure.8}}
-\newlabel{fig:l2loss}{{8}{5}{Loss Function = $\sum _{i = 1}^{n} (y_i - f(x_i))^2$, Training Error = 0.271, Testing Error = 0.276}{figure.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Loss Function = LASSO, Training Error = 0.321, Testing Error = 0.373}}{5}{figure.5}}
+\newlabel{fig:l1loss}{{5}{5}{Loss Function = LASSO, Training Error = 0.321, Testing Error = 0.373}{figure.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Loss Function = Ridge, Training Error = 0.271, Testing Error = 0.276}}{5}{figure.6}}
+\newlabel{fig:l2loss}{{6}{5}{Loss Function = Ridge, Training Error = 0.271, Testing Error = 0.276}{figure.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Best Neural Network White Wine predictor.}}{5}{figure.7}}
+\newlabel{fig:wwbest}{{7}{5}{Best Neural Network White Wine predictor}{figure.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Best Neural Network Red Wine predictor}}{5}{figure.8}}
+\newlabel{fig:rwbest}{{8}{5}{Best Neural Network Red Wine predictor}{figure.8}{}}
