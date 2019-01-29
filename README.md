@@ -1,1 +1,5 @@
-# machine_learning
+# Machine Learning Coursework 2018
+
+This report examines different approaches to predicting wine quality using the Wine Quality dataset. This is a large dataset containing 4898 samples of white wines and 1599 red. Throughout this report wine quality is examined using regression, the standard approach when modelling continuous data, attempting to predict the quality of a wine from various input parameters. Multiple learning methods are implemented, discussed and compared in order to obtain a predictor with the smallest test error possible.
+All code for this report was written in Python using the libraries Pandas for importing and manipulating data and Tensorflow for creating and training models to pre- dict the data.
+The objective of this report is to identify the predictor with the best regression performance.
